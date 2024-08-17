@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gold_drop">#F87700</color>
+    <color name="timeberwolf">#D9D7D3</color>
+    <color name="gray_nurse">#E7E8E7</color>
+    <color name="parl">#E89843</color>
+    <color name="copper">#BA7A2F</color>
+    <color name="heavy_metal">#2C2F2D</color>
+    <color name="old_copper">#754834</color>
 </resources>
