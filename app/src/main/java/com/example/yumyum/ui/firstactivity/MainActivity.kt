@@ -1,4 +1,4 @@
-package com.example.yumyum.ui.main
+package com.example.yumyum.ui.firstactivity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
