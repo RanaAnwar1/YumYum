@@ -1,5 +1,5 @@
 package com.example.yumyum.data.source.local
 
-interface LocalDataSource {
+interface FavouriteMealLocalDataSource {
 // TODO: implement required functions
 }
