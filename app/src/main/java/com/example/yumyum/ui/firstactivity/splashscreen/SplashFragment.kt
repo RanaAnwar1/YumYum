@@ -20,16 +20,16 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSplashBinding.inflate(layoutInflater,container,false)
-        val sharedPref = activity?.getSharedPreferences(Constant.IS_USER_LOGGED, MODE_PRIVATE)
-        val loggedUser = sharedPref?.getBoolean(Constant.IS_USER_LOGGED,false)
-        if(loggedUser == true ){
-            TODO("move to second activity")
-        }else{
-            findNavController().apply {
-                popBackStack(R.id.splashFragment, true)
-                navigate(R.id.action_splashFragment_to_loginFragment)
-            }
-        }
+//        val sharedPref = activity?.getSharedPreferences(Constant.IS_USER_LOGGED, MODE_PRIVATE)
+//        val loggedUser = sharedPref?.getBoolean(Constant.IS_USER_LOGGED,false)
+//        if(loggedUser == true ){
+//            TODO("move to second activity")
+//        }else{
+//            findNavController().apply {
+//                popBackStack(R.id.splashFragment, true)
+//                navigate(R.id.action_splashFragment_to_loginFragment)
+//            }
+//        }
         return binding.root
     }
 
