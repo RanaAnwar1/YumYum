@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.YumYum" parent="Base.Theme.YumYum" />
+
+    <style name="YamYamTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/gold_drop</item>
+        <item name="hintTextColor">@color/heavy_metal</item>
+        <item name="android:textColorHint">@color/heavy_metal</item>
+        <item name="startIconTint">@color/heavy_metal</item>
+        <item name="fontFamily">@font/meditative</item>
+        <item name="endIconTint">@color/heavy_metal</item>
+        <item name="textFillColor">@color/heavy_metal</item>
+        <item name="cursorColor">@color/heavy_metal</item>
+    </style>
 </resources>
