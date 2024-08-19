@@ -41,4 +41,9 @@ abstract class ApplicationDatabase : RoomDatabase(), FavouriteMealLocalDataSourc
     override suspend fun getUserByUsername(username: String): User? {
         return userDao().getUserByUsername(username)
     }
+
+    override suspend fun getName(username: String): User? {
+        // TODO: implement the userdao getname function and override it here
+        return null
+    }
 }

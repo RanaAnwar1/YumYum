@@ -11,5 +11,5 @@ interface UserLocalDataSource {
 
     suspend fun getUserByUsername(username: String): User?
 
-
+    suspend fun getName(username: String): User?
 }

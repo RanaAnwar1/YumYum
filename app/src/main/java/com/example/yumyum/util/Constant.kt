@@ -4,4 +4,5 @@ object Constant {
     const val IS_USER_LOGGED = "USERNAME"
     const val USER_UNKNOWN = "UNKNOWN"
     const val Name_UNKNOWN = "UNNAMED"
+    const val DEFAULT_PASSWORD = "YAMYAM"
 }
