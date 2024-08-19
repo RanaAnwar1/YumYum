@@ -5,8 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.yumyum.data.model.FavoriteMeal
+import com.example.yumyum.data.model.User
 
-@Database(entities = [UserEntity::class, FavoriteMealEntity::class], version = 1)
+@Database(
+    entities = [User::class,FavoriteMeal::class],
+    version = 1,
+    exportSchema = false
+)
 @TypeConverters(Converters::class)
 abstract class ApplicationDatabase : RoomDatabase(), FavouriteMealLocalDataSource, UserLocalDataSource {
     abstract fun mealDao(): FavoriteMealDao
@@ -28,4 +34,11 @@ abstract class ApplicationDatabase : RoomDatabase(), FavouriteMealLocalDataSourc
         }
     }
 
+    override suspend fun insertUser(user: User) {
+        userDao().insertUser(user)
+    }
+
+    override suspend fun getUserByUsername(username: String): User? {
+        return userDao().getUserByUsername(username)
+    }
 }
