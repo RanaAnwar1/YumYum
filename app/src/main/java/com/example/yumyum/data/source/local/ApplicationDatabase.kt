@@ -1,13 +1,15 @@
 package com.example.yumyum.data.source.local
 
 import android.content.Context
+import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
-//@Database(entities = , version = 1, exportSchema = false)
-//@TypeConverters(Converters::class)
+@Database(entities = [UserEntity::class, FavoriteMealEntity::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class ApplicationDatabase : RoomDatabase(), FavouriteMealLocalDataSource, UserLocalDataSource {
-    abstract fun mealDao(): MealDao
+    abstract fun mealDao(): FavoriteMealDao
     abstract fun userDao(): UserDao
 
     companion object {
