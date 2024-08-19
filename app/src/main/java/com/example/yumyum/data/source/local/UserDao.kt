@@ -10,13 +10,10 @@ import com.example.yumyum.data.model.User
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUser(user: User): Int
+    suspend fun insertUser(user: User)
 
-    @Query("SELECT * FROM users WHERE userId = :userId")
-    suspend fun getUserById(userId: Int): User?
+    @Query("SELECT * FROM User WHERE username = :username")
+    suspend fun getUserByUsername(username: String): User?
 
-    @Transaction
-    @Query("SELECT * FROM users WHERE userId = :userId")
-    suspend fun getUserWithFavoriteMeals(userId: Int): UserWithFavoriteMeals?
 
 }

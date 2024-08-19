@@ -7,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.yumyum.R
+import com.example.yumyum.databinding.FragmentLoginBinding
+import com.example.yumyum.databinding.FragmentSignUpBinding
 
 class SignUpFragment : Fragment() {
 
     private val viewModel: SignUpViewModel by viewModels()
-
+    private lateinit var binding: FragmentSignUpBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -22,7 +24,9 @@ class SignUpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_sign_up, container, false)
+        binding = FragmentSignUpBinding.inflate(layoutInflater,container,false)
+
+        return binding.root
     }
 
 

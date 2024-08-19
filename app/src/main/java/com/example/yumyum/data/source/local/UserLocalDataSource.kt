@@ -4,11 +4,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.example.yumyum.data.model.User
 
 interface UserLocalDataSource {
-    suspend fun insertUser(user: UserEntity): Int
+    suspend fun insertUser(user: User)
 
-    suspend fun getUserById(userId: Int): UserEntity?
+    suspend fun getUserByUsername(username: String): User?
 
-    suspend fun getUserWithFavoriteMeals(userId: Int): UserWithFavoriteMeals?
+
 }
