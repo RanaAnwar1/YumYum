@@ -1,5 +1,7 @@
 package com.example.yumyum.ui.firstactivity
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -15,25 +17,15 @@ import kotlinx.coroutines.withContext
 class UserViewModel(
     private val repo:UserRepository
 ):ViewModel() {
-
-    fun isUserAvailable(inputUsername:String):Boolean{
-        var actualUsername = ""
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = async { repo.getUserByUsername(inputUsername) }
-            actualUsername = result.await()?.username ?: Constant.USER_UNKNOWN
-        }
-        return actualUsername == inputUsername
+    suspend fun isUserAvailable(inputUsername: String): Boolean {
+        val result = repo.getUserByUsername(inputUsername)
+        return result?.username == inputUsername
     }
-
-    fun isPasswordCorrect(username: String,inputPassword:String):Boolean{
-        var actualPassword = ""
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = async { repo.getUserByUsername(username) }
-            actualPassword = result.await()?.password ?: Constant.DEFAULT_PASSWORD
-        }
+    suspend fun isPasswordCorrect(username: String, inputPassword: String): Boolean {
+        val result = repo.getUserByUsername(username)
+        val actualPassword = result?.password ?: Constant.DEFAULT_PASSWORD
         return actualPassword == inputPassword
     }
-
     fun getName(username: String):String{
         var name: String = ""
         viewModelScope.launch(Dispatchers.IO) {
@@ -55,6 +47,7 @@ class UserViewModelFactory(
     private val repo: UserRepository
 ): ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return UserViewModelFactory(repo) as T
+        return UserViewModel(repo) as T
     }
 }
+

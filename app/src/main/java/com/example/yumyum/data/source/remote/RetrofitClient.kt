@@ -1,6 +1,8 @@
 package com.example.yumyum.data.source.remote
 
 import androidx.lifecycle.LiveData
+import com.example.yumyum.data.model.Area
+import com.example.yumyum.data.model.Category
 import com.example.yumyum.data.model.Meal
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
