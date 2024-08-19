@@ -38,4 +38,11 @@ class UserViewModel(
         }
         return username ?: Constant.USER_UNKNOWN
     }
+    fun getName():String{
+        var name: String? = null
+        viewModelScope.launch(Dispatchers.IO) {
+            name = repo.getName()
+        }
+        return name ?: Constant.Name_UNKNOWN
+    }
 }
