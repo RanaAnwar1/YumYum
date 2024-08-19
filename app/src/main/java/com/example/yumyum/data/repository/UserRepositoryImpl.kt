@@ -3,7 +3,11 @@ package com.example.yumyum.data.repository
 import com.example.yumyum.data.model.User
 
 class UserRepositoryImpl:UserRepository {
-    override suspend fun getUserByUsername(): User? {
+    override suspend fun getUserByUsername(username: String): User? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getName(username: String): String {
         TODO("Not yet implemented")
     }
 
@@ -11,7 +15,4 @@ class UserRepositoryImpl:UserRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getName(): String {
-        TODO("Not yet implemented")
-    }
 }

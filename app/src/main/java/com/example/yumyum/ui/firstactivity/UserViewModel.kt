@@ -13,57 +13,48 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class UserViewModel(
-    val repo:UserRepository
+    private val repo:UserRepository
 ):ViewModel() {
 
     fun isUserAvailable(inputUsername:String):Boolean{
         var actualUsername = ""
         viewModelScope.launch(Dispatchers.IO) {
-            val result = async { repo.getUsername() }
-            actualUsername = result.await()
+            val result = async { repo.getUserByUsername(inputUsername) }
+            actualUsername = result.await()?.username ?: Constant.USER_UNKNOWN
         }
         return actualUsername == inputUsername
     }
 
-    fun isPasswordCorrect(inputPassword:String):Boolean{
+    fun isPasswordCorrect(username: String,inputPassword:String):Boolean{
         var actualPassword = ""
         viewModelScope.launch(Dispatchers.IO) {
-            val result = async { repo.getPassword() }
-            actualPassword = result.await()
+            val result = async { repo.getUserByUsername(username) }
+            actualPassword = result.await()?.password ?: Constant.DEFAULT_PASSWORD
         }
         return actualPassword == inputPassword
     }
 
-    fun getUsername():String {
-        var username: String? = null
+    fun getName(username: String):String{
+        var name: String = ""
         viewModelScope.launch(Dispatchers.IO) {
-            username = repo.getUsername()
+            val result = async { repo.getName(username) }
+            name = result.await()
         }
-        return username ?: Constant.USER_UNKNOWN
-    }
-    fun getName():String{
-        var name: String? = null
-        viewModelScope.launch(Dispatchers.IO) {
-            name = repo.getName()
-        }
-        return name ?: Constant.Name_UNKNOWN
+        return name
     }
 
     fun insertUser(name: String, username: String, password: String) {
         val user = User(name = name, username = username, password = password)
-
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                repo.insertUser(user)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.insertUser(user)
         }
     }
 }
 
-class SignUpViewModelFactory(
-    private val userRepository: UserRepository
+class UserViewModelFactory(
+    private val repo: UserRepository
 ): ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return SignUpViewModelFactory(userRepository) as T
+        return UserViewModelFactory(repo) as T
     }
 }
