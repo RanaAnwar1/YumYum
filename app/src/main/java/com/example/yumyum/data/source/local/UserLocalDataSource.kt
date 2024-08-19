@@ -8,8 +8,7 @@ import com.example.yumyum.data.model.User
 
 interface UserLocalDataSource {
     suspend fun insertUser(user: User)
-
     suspend fun getUserByUsername(username: String): User?
 
-    suspend fun getName(username: String): User?
+    suspend fun getName(username: String): String
 }
