@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class FavoriteMeal(
     val dateModified: String?,
     @PrimaryKey(autoGenerate = false)
-    val idMeal: String?,
+    val idMeal: String,
     val strArea: String?,
     val strCategory: String?,
     val strCreativeCommonsConfirmed: String?,
