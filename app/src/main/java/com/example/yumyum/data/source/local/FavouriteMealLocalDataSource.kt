@@ -5,12 +5,15 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.yumyum.data.model.FavoriteMeal
+import com.example.yumyum.data.model.relation.UserMealCrossRef
 
-//interface FavouriteMealLocalDataSource {
-//    suspend fun insertFavoriteMeal(favoriteMeal: FavoriteMeal): Long
-//
-//    suspend fun getFavoriteMealsByUserID(userId: Int): LiveData<List<FavoriteMeal>>
-//
-//    suspend fun removeFavoriteMeal(mealId: String, userId: Int)
-//
-//}
+interface FavouriteMealLocalDataSource {
+    suspend fun insertFavoriteMeal(favoriteMeal: FavoriteMeal)
+
+    suspend fun getFavoriteMealsByUsername(username: String): List<FavoriteMeal>
+
+    suspend fun insertCrossRef(crossRef: UserMealCrossRef)
+
+    // TODO: deleteFavoriteMeal 
+
+}
