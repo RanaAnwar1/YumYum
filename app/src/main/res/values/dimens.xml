@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="header_text">46sp</dimen>
+    <dimen name="header_text2">36sp</dimen>
     <dimen name="body_text">20sp</dimen>
     <dimen name="button_text">24sp</dimen>
+    <dimen name="guide_line_spacing">25dp</dimen>
 </resources>

@@ -17,4 +17,7 @@
         <item name="textFillColor">@color/heavy_metal</item>
         <item name="cursorColor">@color/heavy_metal</item>
     </style>
+
+    
+
 </resources>
