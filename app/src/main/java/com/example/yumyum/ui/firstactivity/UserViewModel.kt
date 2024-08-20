@@ -1,5 +1,6 @@
 package com.example.yumyum.ui.firstactivity
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,22 +18,37 @@ import kotlinx.coroutines.withContext
 class UserViewModel(
     private val repo:UserRepository
 ):ViewModel() {
-    suspend fun isUserAvailable(inputUsername: String): Boolean {
+    private val _isUserAvailable = MutableLiveData<String>()
+    val isAvailable:LiveData<String> get() = _isUserAvailable
+
+    private val _isPasswordCorrect = MutableLiveData<String>()
+    val isPasswordCorrect:LiveData<String> get() = _isPasswordCorrect
+
+    private val _name = MutableLiveData<String>()
+    val name:LiveData<String> get() = _name
+
+    var username = ""
+    var password = ""
+    suspend fun isUserAvailable(inputUsername: String) {
+        Log.d("viewModel_logging", "isUserAvailable")
         val result = repo.getUserByUsername(inputUsername)
-        return result?.username == inputUsername
+        val actualUser = result?.username ?: Constant.USER_UNKNOWN
+        _isUserAvailable.postValue(actualUser)
+        username = actualUser
     }
-    suspend fun isPasswordCorrect(username: String, inputPassword: String): Boolean {
-        val result = repo.getUserByUsername(username)
-        val actualPassword = result?.password ?: Constant.DEFAULT_PASSWORD
-        return actualPassword == inputPassword
+    fun isPasswordCorrect(username: String, inputPassword: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            val result =  repo.getUserByUsername(username)
+            val actualPassword = result?.password ?: Constant.DEFAULT_PASSWORD
+            _isPasswordCorrect.postValue(actualPassword)
+            password = actualPassword
+        }
     }
-    fun getName(username: String):String{
-        var name: String = ""
+    fun getName(username: String){
         viewModelScope.launch(Dispatchers.IO) {
             val result = async { repo.getName(username) }
-            name = result.await()
+            _name.postValue(result.await())
         }
-        return name
     }
 
     fun insertUser(name: String, username: String, password: String) {

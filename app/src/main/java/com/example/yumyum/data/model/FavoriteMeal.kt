@@ -2,7 +2,7 @@ package com.example.yumyum.data.model
 
 import androidx.room.Entity
 
-@Entity
+//@Entity
 data class FavoriteMeal(
     val username:String,
     val dateModified: Any,

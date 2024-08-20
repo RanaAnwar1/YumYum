@@ -6,11 +6,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.yumyum.data.model.FavoriteMeal
 
-interface FavouriteMealLocalDataSource {
-    suspend fun insertFavoriteMeal(favoriteMeal: FavoriteMeal): Long
-
-    suspend fun getFavoriteMealsByUserID(userId: Int): LiveData<List<FavoriteMeal>>
-
-    suspend fun removeFavoriteMeal(mealId: String, userId: Int)
-
-}
+//interface FavouriteMealLocalDataSource {
+//    suspend fun insertFavoriteMeal(favoriteMeal: FavoriteMeal): Long
+//
+//    suspend fun getFavoriteMealsByUserID(userId: Int): LiveData<List<FavoriteMeal>>
+//
+//    suspend fun removeFavoriteMeal(mealId: String, userId: Int)
+//
+//}

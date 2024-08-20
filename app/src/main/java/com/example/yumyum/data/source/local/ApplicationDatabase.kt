@@ -9,13 +9,13 @@ import com.example.yumyum.data.model.FavoriteMeal
 import com.example.yumyum.data.model.User
 
 @Database(
-    entities = [User::class,FavoriteMeal::class],
+    entities = [User::class],
     version = 1,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
-abstract class ApplicationDatabase : RoomDatabase(), FavouriteMealLocalDataSource, UserLocalDataSource {
-    abstract fun mealDao(): FavoriteMealDao
+abstract class ApplicationDatabase : RoomDatabase(),  UserLocalDataSource {
+//    abstract fun mealDao(): FavoriteMealDao
     abstract fun userDao(): UserDao
 
     companion object {

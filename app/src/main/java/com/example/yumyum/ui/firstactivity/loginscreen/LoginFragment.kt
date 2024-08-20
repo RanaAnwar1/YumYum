@@ -1,12 +1,15 @@
 package com.example.yumyum.ui.firstactivity.loginscreen
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -43,7 +46,7 @@ class LoginFragment : Fragment() {
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
-                performLogin(username, password)
+                checkUserAvailability(username, password)
             }
         }
 
@@ -52,20 +55,79 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun performLogin(username: String, password: String) {
+
+    private fun checkUserAvailability(username: String, password: String) {
         lifecycleScope.launch {
-            val isUserAvailable = viewModel.isUserAvailable(username)
-            val isCorrect = viewModel.isPasswordCorrect(username,password)
-            if (isUserAvailable) {
-                if (isCorrect) {
-                    Toast.makeText(requireContext(), "Login successful", Toast.LENGTH_SHORT).show()
-                    // TODO: Navigate to the home screen
-                } else {
-                    Toast.makeText(requireContext(), "Incorrect username or password", Toast.LENGTH_SHORT).show()
-                }
+            lifecycleScope.launch { viewModel.isUserAvailable(username) }.join()
+            if (viewModel.username == username) {
+                checkPassword(username, password)
             } else {
-                Toast.makeText(requireContext(), "Incorrect username or password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "User is not available please sign up",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
+
+    private fun checkPassword(username: String,password: String){
+        lifecycleScope.launch {
+            lifecycleScope.launch { viewModel.isPasswordCorrect(username,password) }.join()
+            if(viewModel.password == password){
+                Toast.makeText(requireContext(),"logged",Toast.LENGTH_SHORT).show()
+            }
+            else
+                Toast.makeText(requireContext(),"wrong password",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    private fun checkUserAvailability(username: String, password: String) {
+//        lifecycleScope.launch {
+//            lifecycleScope.launch { viewModel.isUserAvailable(username) }.join()
+//            viewModel.isAvailable.observe(viewLifecycleOwner) { actualUsername ->
+//                if (actualUsername == username) {
+//                    checkPassword(username, password)
+//                } else {
+//                    Log.d("viewModel_logging", "actualUsername")
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "User is not available please sign up",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                }
+//            }
+//        }
+//    }
+//    private fun checkPassword(username: String,password: String){
+//        viewModel.isPasswordCorrect(username,password)
+//        viewModel.isPasswordCorrect.observe(viewLifecycleOwner){ actualPassword ->
+//            if(actualPassword == password){
+//                Toast.makeText(requireContext(),"logged in",Toast.LENGTH_SHORT).show()
+//            }
+//            else
+//                Log.d("viewModel_logging",actualPassword)
+//                Toast.makeText(requireContext(),"sorry wrong password",Toast.LENGTH_SHORT).show()
+//        }
+//    }
 }
