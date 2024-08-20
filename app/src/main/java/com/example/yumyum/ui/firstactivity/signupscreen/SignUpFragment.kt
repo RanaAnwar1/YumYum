@@ -2,6 +2,7 @@ package com.example.yumyum.ui.firstactivity.signupscreen
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -56,12 +57,19 @@ class SignUpFragment : Fragment() {
     }
     private fun performSignUp(username:String, name:String, password:String){
         lifecycleScope.launch {
-            val isAvailable = viewModel.isUserAvailable(username)
-            if (isAvailable) {
-                Toast.makeText(requireContext(), "Username already taken", Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch { viewModel.isUserAvailable(username) }.join()
+            Log.d("viewModel_logging", viewModel.username)
+            if (viewModel.username == username) {
+                Toast.makeText(requireContext(), "Username already taken", Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 viewModel.insertUser(name, username, password)
-                Toast.makeText(requireContext(), "Account created successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Account created successfully",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
                 findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
             }
         }
