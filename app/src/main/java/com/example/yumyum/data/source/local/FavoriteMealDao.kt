@@ -6,16 +6,16 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.yumyum.data.model.FavoriteMeal
+import com.example.yumyum.data.model.relation.UserMealCrossRef
 
-//@Dao
-//interface FavoriteMealDao {
-//  @Insert(onConflict = OnConflictStrategy.REPLACE)
-//  suspend fun insertFavoriteMeal(favoriteMeal: FavoriteMeal): Long
-//
-//  @Query("SELECT * FROM FavoriteMeal WHERE username = :userId")
-//  suspend fun getFavoriteMealsByUserID(userId: String): LiveData<List<FavoriteMeal>>
-//
-//  @Query("DELETE FROM FavoriteMeal WHERE idMeal = :mealId AND username = :userId")
-//  suspend fun removeFavoriteMeal(mealId: String, userId: Int)
-//
-//}
+@Dao
+interface FavoriteMealDao {
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertFavoriteMeal(favoriteMeal: FavoriteMeal)
+
+  @Query("select * from FavoriteMeal where idMeal in ( select idMeal from UserMealCrossRef where username = :username)")
+  suspend fun getFavoriteMealsByUsername(username: String): List<FavoriteMeal>
+
+  @Insert(onConflict = OnConflictStrategy.IGNORE)
+  suspend fun insertCrossRef(crossRef: UserMealCrossRef)
+}
