@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_meal_navigation"
-    app:startDestination="@id/mealsViewFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -19,4 +19,5 @@
         android:name="com.example.yumyum.ui.secondactivity.mealsviewscreen.MealsViewFragment"
         android:label="fragment_meals_view"
         tools:layout="@layout/fragment_meals_view" />
+    <include app:graph="@navigation/activity_main_navigation" />
 </navigation>
