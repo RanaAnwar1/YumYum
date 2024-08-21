@@ -74,6 +74,7 @@ class LoginFragment : Fragment() {
     private fun checkPassword(username: String,password: String){
         lifecycleScope.launch {
             lifecycleScope.launch { viewModel.isPasswordCorrect(username,password) }.join()
+            Log.d("viewModel_Logging",viewModel.password)
             if(viewModel.password == password){
                 findNavController().navigate(R.id.action_loginFragment_to_activity_meal_navigation)
             }
