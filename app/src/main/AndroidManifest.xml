@@ -15,13 +15,11 @@
         android:theme="@style/Theme.YumYum"
         tools:targetApi="31">
         <activity
-            android:name=".ui.firstactivity.MainActivity"
+            android:name=".ui.secondactivity.MealActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.secondactivity.MealActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
-
+            android:name=".ui.firstactivity.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
