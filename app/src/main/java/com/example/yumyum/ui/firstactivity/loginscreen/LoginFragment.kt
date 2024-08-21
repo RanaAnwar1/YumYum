@@ -75,7 +75,7 @@ class LoginFragment : Fragment() {
         lifecycleScope.launch {
             lifecycleScope.launch { viewModel.isPasswordCorrect(username,password) }.join()
             if(viewModel.password == password){
-                Toast.makeText(requireContext(),"logged",Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_loginFragment_to_activity_meal_navigation)
             }
             else
                 Toast.makeText(requireContext(),"wrong password",Toast.LENGTH_SHORT).show()
