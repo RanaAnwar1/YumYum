@@ -28,8 +28,7 @@ abstract class ApplicationDatabase : RoomDatabase(), FavouriteMealLocalDataSourc
                     context.applicationContext,
                     ApplicationDatabase::class.java,
                     "app_db"
-                ).fallbackToDestructiveMigration()
-                    .build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }
