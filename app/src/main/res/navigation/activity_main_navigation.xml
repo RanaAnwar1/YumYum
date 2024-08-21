@@ -16,10 +16,8 @@
             app:popUpTo="@+id/activity_main_navigation"
             app:popUpToInclusive="true"/>
         <action
-            android:id="@+id/action_splashFragment_to_activity_meal_navigation"
-            app:destination="@id/activity_meal_navigation"
-            app:popUpTo="@+id/activity_main_navigation"
-            app:popUpToInclusive="true"/>
+            android:id="@+id/action_splashFragment_to_mealActivity"
+            app:destination="@id/mealActivity" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -30,10 +28,8 @@
             android:id="@+id/action_loginFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_activity_meal_navigation"
-            app:destination="@id/activity_meal_navigation"
-            app:popUpTo="@+id/activity_main_navigation"
-            app:popUpToInclusive="true"/>
+            android:id="@+id/action_loginFragment_to_mealActivity"
+            app:destination="@id/mealActivity" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -44,5 +40,9 @@
             android:id="@+id/action_signUpFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
-    <include app:graph="@navigation/activity_meal_navigation" />
+    <activity
+        android:id="@+id/mealActivity"
+        android:name="com.example.yumyum.ui.secondactivity.MealActivity"
+        android:label="activity_meal"
+        tools:layout="@layout/activity_meal" />
 </navigation>

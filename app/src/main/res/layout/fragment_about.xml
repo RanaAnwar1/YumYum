@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.secondactivity.aboutscreen.AboutFragment">
+    tools:context=".ui.secondactivity.aboutfragment.AboutFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

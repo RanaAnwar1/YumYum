@@ -7,16 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
 import com.example.yumyum.R
 import com.example.yumyum.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
+
     lateinit var binding: FragmentHomeBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View?{
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "Hello, Rana"
         binding = FragmentHomeBinding.inflate(layoutInflater,container,false)
         val areas = listOf("Egypt","Palestine","USA","Russia")
         val categories = listOf(
