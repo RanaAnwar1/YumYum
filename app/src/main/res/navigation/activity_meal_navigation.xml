@@ -3,11 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_meal_navigation"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/mealsViewFragment">
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.yumyum.ui.secondactivity.homescreen.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_mealsViewFragment"
+            app:destination="@id/mealsViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealsViewFragment"
+        android:name="com.example.yumyum.ui.secondactivity.mealsviewscreen.MealsViewFragment"
+        android:label="fragment_meals_view"
+        tools:layout="@layout/fragment_meals_view" />
 </navigation>

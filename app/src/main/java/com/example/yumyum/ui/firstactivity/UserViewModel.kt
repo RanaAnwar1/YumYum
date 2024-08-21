@@ -36,13 +36,13 @@ class UserViewModel(
         _isUserAvailable.postValue(actualUser)
         username = actualUser
     }
-    fun isPasswordCorrect(username: String, inputPassword: String){
-        viewModelScope.launch(Dispatchers.IO) {
+    suspend fun isPasswordCorrect(username: String, inputPassword: String){
+
             val result =  repo.getUserByUsername(username)
             val actualPassword = result?.password ?: Constant.DEFAULT_PASSWORD
             _isPasswordCorrect.postValue(actualPassword)
             password = actualPassword
-        }
+
     }
     fun getName(username: String){
         viewModelScope.launch(Dispatchers.IO) {

@@ -82,4 +82,7 @@ dependencies {
 
     //lottie
     implementation(libs.airbnb.lottie)
+
+    //splashscreen
+    implementation(libs.splashscreen)
 }
