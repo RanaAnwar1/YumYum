@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.navigation.fragment.findNavController
 import com.example.yumyum.R
@@ -32,18 +33,15 @@ class SplashFragment : Fragment() {
         return binding.root
     }
 
-    fun navigation(){
-//        val sharedPref = activity?.getSharedPreferences(Constant.IS_USER_LOGGED, MODE_PRIVATE)
-//        val loggedUser = sharedPref?.getBoolean(Constant.IS_USER_LOGGED,false)
-//        if(loggedUser == true ){
-//            TODO("move to second activity")
-//        }else{
-//            findNavController().apply {
-//                popBackStack(R.id.splashFragment, true)
-//                navigate(R.id.action_splashFragment_to_loginFragment)
-//            }
-//        }
-        findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+    private fun navigation(){
+        val sharedPref = activity?.getSharedPreferences(Constant.SHARED_PREF_KEY, MODE_PRIVATE)
+        val loggedUser = sharedPref?.getBoolean(Constant.IS_USER_LOGGED,false)
+        if(loggedUser == true ){
+            findNavController().navigate(R.id.action_splashFragment_to_activity_meal_navigation)
+        }else{
+            findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+        }
+
     }
 
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -19,6 +20,7 @@ import com.example.yumyum.data.source.local.ApplicationDatabase
 import com.example.yumyum.databinding.FragmentLoginBinding
 import com.example.yumyum.ui.firstactivity.UserViewModel
 import com.example.yumyum.ui.firstactivity.UserViewModelFactory
+import com.example.yumyum.util.Constant
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
@@ -76,6 +78,8 @@ class LoginFragment : Fragment() {
             lifecycleScope.launch { viewModel.isPasswordCorrect(username,password) }.join()
             Log.d("viewModel_Logging",viewModel.password)
             if(viewModel.password == password){
+                val sharedPref = activity?.getSharedPreferences(Constant.SHARED_PREF_KEY, MODE_PRIVATE)
+                sharedPref?.edit()?.putBoolean(Constant.IS_USER_LOGGED,true)?.apply()
                 findNavController().navigate(R.id.action_loginFragment_to_activity_meal_navigation)
             }
             else
