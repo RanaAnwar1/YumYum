@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="100dp"
+    android:padding="16dp"
+    tools:context=".ui.secondactivity.mealdetailsscreen.instructionsfragment.InstructionsFragment">
+
+    <!-- FrameLayout to overlay the ImageView and the play button -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <ImageView
+            android:id="@+id/videoPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <ImageButton
+            android:id="@+id/playButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:src="@drawable/baseline_smart_display_24"
+            android:contentDescription="play_video" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/instructionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Details"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/instructionCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Vegetarian"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/instructionDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad..."
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="70dp" />
+</LinearLayout>

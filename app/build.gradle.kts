@@ -85,4 +85,6 @@ dependencies {
 
     //splashscreen
     implementation(libs.splashscreen)
+    //youtube video player Iframe APi
+    implementation ("androidx.webkit:webkit:1.4.0")
 }
