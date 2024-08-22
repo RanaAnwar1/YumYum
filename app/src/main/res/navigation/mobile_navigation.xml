@@ -7,7 +7,11 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.yumyum.ui.secondactivity.homescreen.HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_mealsViewFragment"
+            app:destination="@id/mealsViewFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_search"
         android:name="com.example.yumyum.ui.secondactivity.searchscreen.SearchFragment"
@@ -28,6 +32,23 @@
         android:name="com.example.yumyum.ui.secondactivity.mealdetailsscreen.MealDetailsFragment"
         android:label="fragment_meal_details"
         tools:layout="@layout/fragment_meal_details" />
+    <fragment
+        android:id="@+id/mealsViewFragment"
+        android:name="com.example.yumyum.ui.secondactivity.mealsviewscreen.MealsViewFragment"
+        android:label="Meals"
+        tools:layout="@layout/fragment_meals_view" >
+        <argument
+            android:name="filterType"
+            app:nullable="false"
+            app:argType="integer"/>
+        <argument
+            android:name="filterWord"
+            app:nullable="false"
+            android:defaultValue="american"
+            app:argType="string"/>
+    </fragment>
+
+
 
 
 </navigation>

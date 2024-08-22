@@ -1,38 +1,40 @@
 package com.example.yumyum.data.source.remote
 
 import androidx.lifecycle.LiveData
-import com.example.yumyum.data.model.Area
-import com.example.yumyum.data.model.Category
+import com.example.yumyum.data.model.Areas
+import com.example.yumyum.data.model.Categories
+import com.example.yumyum.data.model.FavoriteMeal
 import com.example.yumyum.data.model.Meal
+import com.example.yumyum.data.model.Meals
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiService {
     @GET("categories.php")
-    suspend fun listAllMealsCategories(): LiveData<List<Category>>
+    suspend fun listAllMealsCategories(): Categories
     //www.themealdb.com/api/json/v1/1/categories.php
     @GET("list.php?a=list")
-    suspend fun listAllAreas(): LiveData<List<Area>>
+    suspend fun listAllAreas(): Areas
     //https://www.themealdb.com/api/json/v1/1/list.php?a=list
     @GET("filter.php")
     suspend fun listAllMealsByAreas(
         @Query("a") area: String
-    ): LiveData<List<Meal>>
+    ): Meals
     //https://www.themealdb.com/api/json/v1/1/filter.php?a=Canadian
     @GET("filter.php")
     suspend fun listAllMealsByCategory(
         @Query("c") category: String
-    ): LiveData<List<Meal>>
+    ): Meals
     //www.themealdb.com/api/json/v1/1/filter.php?c=Seafood
     @GET("search.php")
     suspend fun searchMealByName(
         @Query("s") mealName: String
-    ): LiveData<List<Meal>>
+    ): List<FavoriteMeal>
     //www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata
     @GET("lookup.php")
     suspend fun listMealDetailsByID(
         @Query("i") mealId: Int
-    ): Meal
+    ): FavoriteMeal
     //www.themealdb.com/api/json/v1/1/lookup.php?i=52772
 
 }

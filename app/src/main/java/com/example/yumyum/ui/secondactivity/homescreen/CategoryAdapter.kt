@@ -3,19 +3,19 @@ package com.example.yumyum.ui.secondactivity.homescreen
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.example.yumyum.data.model.Category
 import com.example.yumyum.databinding.CardCategoryBinding
-import com.example.yumyum.databinding.ViewItemAreaBinding
 
-class CategoryAdapter: RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+class CategoryAdapter(val onClick:(category:String) -> Unit): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
-    var categories:List<Cat> = emptyList()
+    var categories:List<Category> = emptyList()
     inner class CategoryViewHolder(val binding: CardCategoryBinding): RecyclerView.ViewHolder(binding.root)
 
 
-    fun setList(newList:List<Cat>){
+    fun setList(newList:List<Category>){
         categories = newList
+        notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding = CardCategoryBinding.inflate(LayoutInflater.from(parent.context),parent,false)
@@ -26,16 +26,19 @@ class CategoryAdapter: RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>(
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.binding.apply {
-            cardTitle.text = categories[position].title
+            cardTitle.text = categories[position].strCategory
             Glide.with(root)
-                .load(categories[position].Url)
+                .load(categories[position].strCategoryThumb)
                 .into(cardImageView)
+            cardFavBt.setOnClickListener {
+                // TODO: add to fav database
+            }
+            mealCard.setOnClickListener {
+                onClick(categories[position].strCategory)
+            }
         }
+
+
     }
 
 }
-
-data class Cat(
-    val title:String,
-    val Url:String
-)
