@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.yumyum.data.model.Meal
 import com.example.yumyum.databinding.MealItemViewBinding
-import com.example.yumyum.ui.secondactivity.homescreen.Cat
+
 
 class MealAdapter:RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
@@ -15,6 +15,7 @@ class MealAdapter:RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
     fun setList(newList:List<Meal>){
         meals = newList
+        notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
         val binding = MealItemViewBinding.inflate(LayoutInflater.from(parent.context),parent,false)

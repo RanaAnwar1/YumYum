@@ -6,4 +6,6 @@ object Constant {
     const val USER_UNKNOWN = "UNKNOWN"
     const val Name_UNKNOWN = "UNNAMED"
     const val DEFAULT_PASSWORD = "YAMYAM"
+    const val FILTER_BY_AREA = "Area"
+    const val FILTER_BY_CATEGORY = "Category"
 }

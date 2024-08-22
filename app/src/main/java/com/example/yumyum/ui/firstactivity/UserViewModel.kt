@@ -29,20 +29,22 @@ class UserViewModel(
 
     var username = ""
     var password = ""
-    suspend fun isUserAvailable(inputUsername: String) {
-        Log.d("viewModel_logging", "isUserAvailable")
-        val result = repo.getUserByUsername(inputUsername)
-        val actualUser = result?.username ?: Constant.USER_UNKNOWN
-        _isUserAvailable.postValue(actualUser)
-        username = actualUser
+    fun isUserAvailable(inputUsername: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("viewModel_logging", "isUserAvailable")
+            val result = async {  repo.getUserByUsername(inputUsername) }
+            val actualUser = result.await()?.username ?: Constant.USER_UNKNOWN
+            _isUserAvailable.postValue(actualUser)
+            username = actualUser
+        }
     }
-    suspend fun isPasswordCorrect(username: String, inputPassword: String){
-
-            val result =  repo.getUserByUsername(username)
-            val actualPassword = result?.password ?: Constant.DEFAULT_PASSWORD
+    fun isPasswordCorrect(username: String, inputPassword: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = async { repo.getUserByUsername(username) }
+            val actualPassword = result.await()?.password ?: Constant.DEFAULT_PASSWORD
             _isPasswordCorrect.postValue(actualPassword)
             password = actualPassword
-
+        }
     }
     fun getName(username: String){
         viewModelScope.launch(Dispatchers.IO) {
