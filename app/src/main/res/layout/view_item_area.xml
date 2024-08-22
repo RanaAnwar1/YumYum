@@ -6,11 +6,12 @@
 
     <Button
         android:id="@+id/area_recycler_bt"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/meditative"
-        style="@style/Widget.Material3.Button.OutlinedButton"
         android:text="Egyptian"
         android:textColor="@color/gold_drop"
         android:textSize="@dimen/body_text"
