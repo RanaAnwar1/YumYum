@@ -2,20 +2,24 @@ package com.example.yumyum.ui.secondactivity.homescreen
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.yumyum.data.model.Area
 import com.example.yumyum.data.model.Category
 import com.example.yumyum.databinding.CardCategoryBinding
 
 class CategoryAdapter(val onClick:(category:String) -> Unit): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
-    var categories:List<Category> = emptyList()
+    private var categories:List<Category> = emptyList()
     inner class CategoryViewHolder(val binding: CardCategoryBinding): RecyclerView.ViewHolder(binding.root)
 
 
     fun setList(newList:List<Category>){
+        val difference = CategoryDiffUtil(categories,newList)
+        val result = DiffUtil.calculateDiff(difference)
+        result.dispatchUpdatesTo(this)
         categories = newList
-        notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding = CardCategoryBinding.inflate(LayoutInflater.from(parent.context),parent,false)

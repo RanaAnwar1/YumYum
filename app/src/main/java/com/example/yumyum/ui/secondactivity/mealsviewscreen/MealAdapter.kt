@@ -2,6 +2,7 @@ package com.example.yumyum.ui.secondactivity.mealsviewscreen
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.yumyum.data.model.Meal
@@ -14,8 +15,11 @@ class MealAdapter:RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
     inner class MealViewHolder(val binding: MealItemViewBinding):RecyclerView.ViewHolder(binding.root)
 
     fun setList(newList:List<Meal>){
+        val difference = MealDiffUtil(meals,newList)
+        val result = DiffUtil.calculateDiff(difference)
+        result.dispatchUpdatesTo(this)
         meals = newList
-        notifyDataSetChanged()
+
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
         val binding = MealItemViewBinding.inflate(LayoutInflater.from(parent.context),parent,false)
