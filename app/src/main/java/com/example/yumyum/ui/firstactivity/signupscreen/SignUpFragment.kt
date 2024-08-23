@@ -25,10 +25,9 @@ class SignUpFragment : Fragment() {
         UserViewModelFactory(UserRepositoryImpl(ApplicationDatabase.getInstance(requireContext())))
     }
     private lateinit var binding: FragmentSignUpBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var name: String
+    private lateinit var username: String
+    private lateinit var password: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,22 +43,18 @@ class SignUpFragment : Fragment() {
             findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
         }
         binding.signupBt.setOnClickListener {
-            val name = binding.signupNameTv.editText?.text.toString().trim()
-            val username = binding.signupUsernameTv.editText?.text.toString().trim()
-            val password = binding.signupPasswordTv.editText?.text.toString().trim()
+            name = binding.signupNameTv.editText?.text.toString().trim()
+            username = binding.signupUsernameTv.editText?.text.toString().trim()
+            password = binding.signupPasswordTv.editText?.text.toString().trim()
 
             if (name.isEmpty() || username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(requireContext(), "All fields must be filled out", Toast.LENGTH_SHORT).show()
             } else {
-                performSignUp(username,name,password)
+                viewModel.isUserAvailable(username)
             }
         }
-    }
-    private fun performSignUp(username:String, name:String, password:String){
-        lifecycleScope.launch {
-            lifecycleScope.launch { viewModel.isUserAvailable(username) }.join()
-            Log.d("viewModel_logging", viewModel.username)
-            if (viewModel.username == username) {
+        viewModel.isAvailable.observe(viewLifecycleOwner){ actualUsername ->
+            if (actualUsername == username) {
                 Toast.makeText(requireContext(), "Username already taken", Toast.LENGTH_SHORT)
                     .show()
             } else {
@@ -68,11 +63,11 @@ class SignUpFragment : Fragment() {
                     requireContext(),
                     "Account created successfully",
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
                 findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
             }
         }
     }
+
 
 }
