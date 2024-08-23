@@ -36,6 +36,7 @@ class SplashFragment : Fragment() {
     private fun navigation(){
         val sharedPref = activity?.getSharedPreferences(Constant.SHARED_PREF_KEY, MODE_PRIVATE)
         val loggedUser = sharedPref?.getBoolean(Constant.IS_USER_LOGGED,false)
+        Constant.USER_NAME = sharedPref?.getString(Constant.SAVED_USER_NAME_KEY,"non").toString()
         if(loggedUser == true ){
             findNavController().navigate(R.id.action_splashFragment_to_mealActivity)
         }else{

@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yumyum.data.model.Meal
 import com.example.yumyum.data.repository.MealsRepositoryImpl
+import com.example.yumyum.data.source.local.ApplicationDatabase
 import com.example.yumyum.data.source.remote.RetrofitClient
 import com.example.yumyum.databinding.FragmentMealsViewBinding
 import com.example.yumyum.ui.secondactivity.MealViewModel
@@ -24,14 +25,18 @@ class MealsViewFragment : Fragment() {
     lateinit var binding:FragmentMealsViewBinding
     private val args: MealsViewFragmentArgs by navArgs()
     private val viewModel:MealViewModel by viewModels {
-        MealViewModelFactory(MealsRepositoryImpl(RetrofitClient))
+        MealViewModelFactory(MealsRepositoryImpl(RetrofitClient,ApplicationDatabase.getInstance(requireContext())))
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentMealsViewBinding.inflate(layoutInflater,container,false)
-        val adapter = MealAdapter()
+        val adapter = MealAdapter({},{mealId ->
+            Log.d("checking_database",Constant.USER_NAME)
+            Log.d("checking_database",mealId)
+            viewModel.insertFavoriteMealById(Constant.USER_NAME,mealId)
+        })
         val filterType = args.filterType
         val filterWord = args.filterWord
         if(filterType == FilterType.AREA.ordinal){

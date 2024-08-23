@@ -7,6 +7,7 @@ import com.example.yumyum.data.model.Categories
 import com.example.yumyum.data.model.FavoriteMeal
 import com.example.yumyum.data.model.Meal
 import com.example.yumyum.data.model.Meals
+import com.example.yumyum.data.model.SearchedMeal
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -44,7 +45,7 @@ object RetrofitClient : RemoteDataSource {
         return apiService.searchMealByName(mealName)
     }
 
-    override suspend fun listMealDetailsByID(mealId: Int): FavoriteMeal {
+    override suspend fun listMealDetailsByID(mealId: String): SearchedMeal {
         return apiService.listMealDetailsByID(mealId)
     }
 }

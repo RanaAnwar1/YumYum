@@ -16,19 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/card_fav_bt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/fav_button_description"
-            android:layout_gravity="end"
-            android:layout_margin="10dp"
-            app:fabCustomSize="50dp"
-            app:maxImageSize="35dp"
-            app:tint="@color/gold_drop"
-            android:backgroundTint="@color/mystic"
-            android:src="@drawable/baseline_favorite_border_24"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

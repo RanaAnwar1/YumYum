@@ -79,9 +79,22 @@ class LoginFragment : Fragment() {
             lifecycleScope.launch { viewModel.isPasswordCorrect(username,password) }.join()
             Log.d("viewModel_Logging",viewModel.password)
             if(viewModel.password == password){
-//                val sharedPref = activity?.getSharedPreferences(Constant.SHARED_PREF_KEY, MODE_PRIVATE)
-//                sharedPref?.edit()?.putBoolean(Constant.IS_USER_LOGGED,true)?.apply()
-                findNavController().navigate(R.id.action_loginFragment_to_mealActivity)
+                if(binding.loginRemembermeCb.isChecked) {
+                    val sharedPref =
+                        activity?.getSharedPreferences(Constant.SHARED_PREF_KEY, MODE_PRIVATE)
+                    sharedPref?.edit()?.apply {
+                        putBoolean(Constant.IS_USER_LOGGED, true)
+                        putString(Constant.SAVED_USER_NAME_KEY,username)
+                    }?.apply()
+                    Constant.USER_NAME = username
+                    Log.d("viewmodel_logging",Constant.USER_NAME)
+                    findNavController().navigate(R.id.action_loginFragment_to_mealActivity)
+                }
+                else {
+                    Constant.USER_NAME = username
+                    Log.d("viewmodel_logging", Constant.USER_NAME)
+                    findNavController().navigate(R.id.action_loginFragment_to_mealActivity)
+                }
             }
             else
                 Toast.makeText(requireContext(),"wrong password",Toast.LENGTH_SHORT).show()
