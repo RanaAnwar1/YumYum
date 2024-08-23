@@ -33,8 +33,6 @@ class MealsViewFragment : Fragment() {
     ): View {
         binding = FragmentMealsViewBinding.inflate(layoutInflater,container,false)
         val adapter = MealAdapter({},{mealId ->
-            Log.d("checking_database",Constant.USER_NAME)
-            Log.d("checking_database",mealId)
             viewModel.insertFavoriteMealById(Constant.USER_NAME,mealId)
         })
         val filterType = args.filterType

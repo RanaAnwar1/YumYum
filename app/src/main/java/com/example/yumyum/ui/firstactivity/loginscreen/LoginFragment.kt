@@ -1,6 +1,7 @@
 package com.example.yumyum.ui.firstactivity.loginscreen
 
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -38,33 +39,25 @@ class LoginFragment : Fragment() {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
-
+    private lateinit var username: String
+    private lateinit var password: String
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.LoginBt.setOnClickListener {
-            val username = binding.loginUsernameTv.editText?.text.toString().trim()
-            val password = binding.loginPasswordTv.editText?.text.toString().trim()
+            username = binding.loginUsernameTv.editText?.text.toString().trim()
+            password = binding.loginPasswordTv.editText?.text.toString().trim()
             Log.d("viewModel_logging","btn click")
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
                 checkUserAvailability(username, password)
+                checkPassword(username, password)
             }
         }
-
-        binding.btnSignup.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
-        }
-    }
-
-
-    private fun checkUserAvailability(username: String, password: String) {
-        lifecycleScope.launch {
-            lifecycleScope.launch { viewModel.isUserAvailable(username) }.join()
-            if (viewModel.username == username) {
-                checkPassword(username, password)
-            } else {
+        viewModel.isAvailable.observe(viewLifecycleOwner) { actualUsername ->
+            Log.d("viewModel_logging","observer")
+            if (actualUsername != username) {
                 Toast.makeText(
                     requireContext(),
                     "User is not available please sign up",
@@ -72,13 +65,8 @@ class LoginFragment : Fragment() {
                 ).show()
             }
         }
-    }
-
-    private fun checkPassword(username: String,password: String){
-        lifecycleScope.launch {
-            lifecycleScope.launch { viewModel.isPasswordCorrect(username,password) }.join()
-            Log.d("viewModel_Logging",viewModel.password)
-            if(viewModel.password == password){
+        viewModel.isPasswordCorrect.observe(viewLifecycleOwner){ actualPassword ->
+            if(actualPassword == password){
                 if(binding.loginRemembermeCb.isChecked) {
                     val sharedPref =
                         activity?.getSharedPreferences(Constant.SHARED_PREF_KEY, MODE_PRIVATE)
@@ -97,42 +85,22 @@ class LoginFragment : Fragment() {
                 }
             }
             else
-                Toast.makeText(requireContext(),"wrong password",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),"sorry wrong password",Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnSignup.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
     }
 
+    private fun checkUserAvailability(username: String, password: String) {
+        viewModel.isUserAvailable(username)
+        Log.d("viewModel_logging", "user-check-function")
 
+    }
+    private fun checkPassword(username: String,password: String){
+        viewModel.isPasswordCorrect(username,password)
+        Log.d("viewModel_logging","password check function")
 
-
-
-//    private fun checkUserAvailability(username: String, password: String) {
-//        viewModel.isUserAvailable(username)
-//        Log.d("viewModel_logging", "user-check-function")
-//        viewModel.isAvailable.observe(viewLifecycleOwner) { actualUsername ->
-//            Log.d("viewModel_logging","observer")
-//            if (actualUsername == username) {
-//                checkPassword(username, password)
-//            } else {
-//                Toast.makeText(
-//                    requireContext(),
-//                    "User is not available please sign up",
-//                    Toast.LENGTH_LONG
-//                ).show()
-//            }
-//        }
-//    }
-//    private fun checkPassword(username: String,password: String){
-//        viewModel.isPasswordCorrect(username,password)
-//        Log.d("viewModel_logging","password check function")
-//        viewModel.isPasswordCorrect.observe(viewLifecycleOwner){ actualPassword ->
-//            if(actualPassword == password){
-//                Log.d("viewModel_logging","logged in observer")
-//                findNavController().navigate(R.id.action_loginFragment_to_mealActivity)
-//                Toast.makeText(requireContext(),"logged in",Toast.LENGTH_SHORT).show()
-//            }
-//            else
-//                Log.d("viewModel_logging","wrong password observer")
-//                Toast.makeText(requireContext(),"sorry wrong password",Toast.LENGTH_SHORT).show()
-//        }
-//    }
+    }
 }
