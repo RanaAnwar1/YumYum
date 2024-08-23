@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.yumyum.R
 import com.example.yumyum.data.model.Meal
 import com.example.yumyum.databinding.MealItemViewBinding
 
@@ -35,6 +36,7 @@ class MealAdapter(val onClick:() -> Unit,val onFavBtClicked:(mealId:String) -> U
                 .load(meals[position].strMealThumb)
                 .into(mealImageView)
             mealFavBt.setOnClickListener {
+                mealFavBt.setImageResource(R.drawable.baseline_favorite_24)
                 onFavBtClicked(meals[position].idMeal)
             }
         }
