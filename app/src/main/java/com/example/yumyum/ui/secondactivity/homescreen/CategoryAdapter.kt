@@ -34,9 +34,6 @@ class CategoryAdapter(val onClick:(category:String) -> Unit): RecyclerView.Adapt
             Glide.with(root)
                 .load(categories[position].strCategoryThumb)
                 .into(cardImageView)
-            cardFavBt.setOnClickListener {
-                // TODO: add to fav database
-            }
             mealCard.setOnClickListener {
                 onClick(categories[position].strCategory)
             }

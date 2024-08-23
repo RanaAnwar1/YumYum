@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.yumyum.R
 import com.example.yumyum.data.model.Area
 import com.example.yumyum.data.repository.MealsRepositoryImpl
+import com.example.yumyum.data.source.local.ApplicationDatabase
 import com.example.yumyum.data.source.remote.ApiService
 import com.example.yumyum.data.source.remote.RetrofitClient
 import com.example.yumyum.databinding.FragmentHomeBinding
@@ -27,7 +28,7 @@ class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
     private val viewModel:MealViewModel by viewModels {
-        MealViewModelFactory(MealsRepositoryImpl(RetrofitClient))
+        MealViewModelFactory(MealsRepositoryImpl(RetrofitClient,ApplicationDatabase.getInstance(requireContext())))
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -9,7 +9,7 @@ import com.example.yumyum.data.model.Meal
 import com.example.yumyum.databinding.MealItemViewBinding
 
 
-class MealAdapter:RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
+class MealAdapter(val onClick:() -> Unit,val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
     var meals:List<Meal> = emptyList()
     inner class MealViewHolder(val binding: MealItemViewBinding):RecyclerView.ViewHolder(binding.root)
@@ -34,6 +34,9 @@ class MealAdapter:RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
             Glide.with(holder.binding.root)
                 .load(meals[position].strMealThumb)
                 .into(mealImageView)
+            mealFavBt.setOnClickListener {
+                onFavBtClicked(meals[position].idMeal)
+            }
         }
     }
 }

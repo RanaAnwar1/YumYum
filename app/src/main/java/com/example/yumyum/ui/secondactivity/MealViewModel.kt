@@ -1,6 +1,7 @@
 package com.example.yumyum.ui.secondactivity
 
 import android.util.Log
+import androidx.annotation.LongDef
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.yumyum.data.model.Area
 import com.example.yumyum.data.model.Areas
 import com.example.yumyum.data.model.Categories
+import com.example.yumyum.data.model.FavoriteMeal
 import com.example.yumyum.data.model.Meal
+import com.example.yumyum.data.model.SearchedMeal
+import com.example.yumyum.data.model.relation.UserMealCrossRef
 import com.example.yumyum.data.repository.MealsRepository
 import com.example.yumyum.data.repository.UserRepository
 import com.example.yumyum.ui.firstactivity.UserViewModel
@@ -18,7 +22,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class MealViewModel(
-    val repo:MealsRepository
+    private val repo:MealsRepository
 ):ViewModel() {
     private val _areas = MutableLiveData<Areas>()
     val areas:LiveData<Areas> get() = _areas
@@ -29,6 +33,8 @@ class MealViewModel(
     private val _meals = MutableLiveData<List<Meal>>()
     val meals:LiveData<List<Meal>> get() = _meals
 
+    private val _favMeals = MutableLiveData<List<FavoriteMeal>>()
+    val favMeals:LiveData<List<FavoriteMeal>> get() = _favMeals
 
     fun getAllAreas(){
         viewModelScope.launch (Dispatchers.IO){
@@ -59,6 +65,24 @@ class MealViewModel(
             val result = async { repo.getMealsByCategories(category) }
             _meals.postValue(result.await())
             Log.d("viewmodel_logging",result.await().toString())
+        }
+    }
+
+    fun insertFavoriteMealById(username:String,mealId:String){
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = async { repo.getMealById(mealId) }
+            val meal = result.await()
+            Log.d("checking_database",meal.toString())
+            repo.insertFavoriteMeal(meal.meals[0])
+            val crossRef = UserMealCrossRef(username,meal.meals[0].idMeal)
+            repo.insertCrossRef(crossRef)
+        }
+    }
+
+    fun getFavoriteMealsByUsername(username: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = async { repo.getMealsByUsername(username) }
+            _favMeals.postValue(result.await())
         }
     }
 

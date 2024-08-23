@@ -8,4 +8,6 @@ object Constant {
     const val DEFAULT_PASSWORD = "YAMYAM"
     const val FILTER_BY_AREA = "Area"
     const val FILTER_BY_CATEGORY = "Category"
+    var USER_NAME = ""
+    const val SAVED_USER_NAME_KEY = "username"
 }

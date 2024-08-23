@@ -6,6 +6,7 @@ import com.example.yumyum.data.model.Categories
 import com.example.yumyum.data.model.FavoriteMeal
 import com.example.yumyum.data.model.Meal
 import com.example.yumyum.data.model.Meals
+import com.example.yumyum.data.model.SearchedMeal
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -17,6 +18,6 @@ interface RemoteDataSource {
     suspend fun listAllMealsByAreas(area: String): Meals
     suspend fun listAllMealsByCategory(category: String): Meals
     suspend fun searchMealByName(mealName: String): List<FavoriteMeal>
-    suspend fun listMealDetailsByID(mealId: Int): FavoriteMeal
+    suspend fun listMealDetailsByID(mealId: String): SearchedMeal
 
 }
