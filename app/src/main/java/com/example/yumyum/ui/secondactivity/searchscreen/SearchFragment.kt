@@ -1,34 +1,73 @@
 package com.example.yumyum.ui.secondactivity.searchscreen
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.yumyum.R
+import com.example.yumyum.data.repository.MealsRepositoryImpl
+import com.example.yumyum.data.source.local.ApplicationDatabase
+import com.example.yumyum.data.source.remote.RetrofitClient
+import com.example.yumyum.ui.secondactivity.MealViewModel
+import com.example.yumyum.ui.secondactivity.MealViewModelFactory
+import com.example.yumyum.ui.secondactivity.mealsviewscreen.MealAdapter
+import com.example.yumyum.util.Constant
+import com.google.android.material.textfield.TextInputEditText
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SearchFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    private lateinit var mealSearchAdapter: MealSearchAdapter
+    private val searchViewModel: MealViewModel by viewModels {
+        MealViewModelFactory(
+            MealsRepositoryImpl(RetrofitClient, ApplicationDatabase.getInstance(requireContext()))
+        )
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        val view = inflater.inflate(R.layout.fragment_search, container, false)
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val recyclerViewMeals = view.findViewById<RecyclerView>(R.id.recyclerViewSearchedMeals)
+        recyclerViewMeals.layoutManager = LinearLayoutManager(context)
+        mealSearchAdapter = MealSearchAdapter(emptyList()) { mealId ->
+            searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+        }
+        recyclerViewMeals.adapter = mealSearchAdapter
+
+        val searchBar = view.findViewById<TextInputEditText>(R.id.materialSearchBar)
+
+        searchBar.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val query = s.toString()
+                searchViewModel.submitQuery(query)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        searchViewModel.searchResults.observe(viewLifecycleOwner, Observer { meals ->
+            val mealsList = meals?.meals ?: emptyList()
+            mealSearchAdapter.updateMeals(mealsList)
+        })
     }
 }

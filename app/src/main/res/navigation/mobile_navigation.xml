@@ -7,6 +7,7 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.yumyum.ui.secondactivity.homescreen.HomeFragment"
+        android:label="Home"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_navigation_home_to_mealsViewFragment"
@@ -16,22 +17,34 @@
         android:id="@+id/navigation_search"
         android:name="com.example.yumyum.ui.secondactivity.searchscreen.SearchFragment"
         android:label="Search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_navigation_search_to_navigation_mealDetails"
+            app:destination="@id/navigation_mealDetails" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_favorite"
         android:name="com.example.yumyum.ui.secondactivity.favoritescreen.FavoriteFragment"
         android:label="Favorites"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_navigation_favorite_to_navigation_mealDetails"
+            app:destination="@id/navigation_mealDetails" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_about"
         android:name="com.example.yumyum.ui.secondactivity.aboutfragment.AboutFragment"
-        android:label="About"
+        android:label="About Us"
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/navigation_mealDetails"
         android:name="com.example.yumyum.ui.secondactivity.mealdetailsscreen.MealDetailsFragment"
-        android:label="fragment_meal_details"
-        tools:layout="@layout/fragment_meal_details" />
+        android:label="Recipe"
+        tools:layout="@layout/fragment_meal_details">
+            <argument
+                android:name="mealId"
+                app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/mealsViewFragment"
         android:name="com.example.yumyum.ui.secondactivity.mealsviewscreen.MealsViewFragment"
@@ -46,6 +59,9 @@
             app:nullable="false"
             android:defaultValue="american"
             app:argType="string"/>
+        <action
+            android:id="@+id/action_mealsViewFragment_to_navigation_mealDetails"
+            app:destination="@id/navigation_mealDetails" />
     </fragment>
 
 

@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.yumyum.R
 import com.example.yumyum.data.repository.MealsRepositoryImpl
 import com.example.yumyum.data.source.local.ApplicationDatabase
@@ -17,6 +19,8 @@ import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 import com.example.yumyum.util.Constant
 
 class FavoriteFragment : Fragment() {
+
+    private lateinit var recyclerViewFavorites: RecyclerView
 
     private val viewModel:MealViewModel by viewModels {
         MealViewModelFactory(
@@ -29,15 +33,18 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFavoriteBinding.inflate(layoutInflater,container,false)
-        val adapter = FavAdapter{
+        val adapter = FavAdapter(viewModel){
 
         }
+        recyclerViewFavorites = binding.recyclerViewFavorites
+        recyclerViewFavorites.layoutManager = GridLayoutManager(context, 2)
         viewModel.getFavoriteMealsByUsername(Constant.USER_NAME)
         viewModel.favMeals.observe(viewLifecycleOwner){ favMeals ->
             adapter.setList(favMeals)
         }
-        binding.favRecycler.adapter = adapter
-        binding.favRecycler.layoutManager = LinearLayoutManager(requireContext())
+
+        binding.recyclerViewFavorites.adapter = adapter
+        binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(requireContext())
         return binding.root
     }
 

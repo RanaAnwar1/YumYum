@@ -1,10 +1,10 @@
 package com.example.yumyum.data.repository
 
-import androidx.lifecycle.LiveData
 import com.example.yumyum.data.model.Areas
 import com.example.yumyum.data.model.Categories
 import com.example.yumyum.data.model.FavoriteMeal
 import com.example.yumyum.data.model.Meal
+import com.example.yumyum.data.model.ReturnedMeal
 import com.example.yumyum.data.model.SearchedMeal
 import com.example.yumyum.data.model.relation.UserMealCrossRef
 import com.example.yumyum.data.source.local.FavouriteMealLocalDataSource
@@ -30,11 +30,11 @@ class MealsRepositoryImpl(
         return remoteDataSource.listAllMealsByCategory(category).meals
     }
 
-    override suspend fun getMealById(id: String): SearchedMeal {
+    override suspend fun getMealById(id: String): ReturnedMeal {
         return remoteDataSource.listMealDetailsByID(id)
     }
 
-    override suspend fun searchMealsByName(name: String): List<FavoriteMeal> {
+    override suspend fun searchMealByName(name: String): SearchedMeal {
         return remoteDataSource.searchMealByName(name)
     }
 
@@ -48,5 +48,13 @@ class MealsRepositoryImpl(
 
     override suspend fun getMealsByUsername(username: String): List<FavoriteMeal> {
         return mealLocalDataSource.getFavoriteMealsByUsername(username)
+    }
+
+    override suspend fun deleteFavoriteMeal(favoriteMeal: FavoriteMeal) {
+        mealLocalDataSource.deleteFavoriteMeal(favoriteMeal)
+    }
+
+    override suspend fun deleteCrossRef(username: String, idMeal: String) {
+        return mealLocalDataSource.deleteCrossRef(username,idMeal)
     }
 }

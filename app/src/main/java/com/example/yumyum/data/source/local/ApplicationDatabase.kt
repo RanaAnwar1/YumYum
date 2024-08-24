@@ -58,4 +58,13 @@ abstract class ApplicationDatabase : RoomDatabase(), FavouriteMealLocalDataSourc
     override suspend fun insertCrossRef(crossRef: UserMealCrossRef) {
         return FavoriteMealDao().insertCrossRef(crossRef)
     }
+
+    override suspend fun deleteFavoriteMeal(favoriteMeal: FavoriteMeal) {
+        return FavoriteMealDao().deleteFavoriteMeal(favoriteMeal)
+    }
+
+    override suspend fun deleteCrossRef(username: String, idMeal: String) {
+        return FavoriteMealDao().deleteCrossRef(username, idMeal)
+
+    }
 }
