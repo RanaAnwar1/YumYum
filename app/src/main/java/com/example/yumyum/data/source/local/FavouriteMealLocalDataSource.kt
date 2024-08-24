@@ -11,6 +11,7 @@ interface FavouriteMealLocalDataSource {
     suspend fun insertFavoriteMeal(favoriteMeal: FavoriteMeal)
 
     suspend fun getFavoriteMealsByUsername(username: String): List<FavoriteMeal>
+    suspend fun getFavoriteMealIdsByUsername(username: String): List<String>
 
     suspend fun insertCrossRef(crossRef: UserMealCrossRef)
 

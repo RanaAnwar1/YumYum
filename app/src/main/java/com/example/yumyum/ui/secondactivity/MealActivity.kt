@@ -3,6 +3,7 @@ package com.example.yumyum.ui.secondactivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -55,7 +56,16 @@ class MealActivity : AppCompatActivity() {
             Toast.makeText(this, "BottomAppBar Navigation Clicked", Toast.LENGTH_SHORT).show()
         }
 
-
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.navigation_home, R.id.navigation_favorite -> {
+                    bottomAppBar.visibility = View.VISIBLE
+                }
+                else -> {
+                    bottomAppBar.visibility = View.GONE
+                }
+            }
+        }
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
@@ -72,6 +82,7 @@ class MealActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

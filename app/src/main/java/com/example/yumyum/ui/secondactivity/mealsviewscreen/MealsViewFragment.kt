@@ -32,9 +32,15 @@ class MealsViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMealsViewBinding.inflate(layoutInflater,container,false)
-        val adapter = MealAdapter({},{mealId ->
-            viewModel.insertFavoriteMealById(Constant.USER_NAME,mealId)
-        })
+        val adapter = MealAdapter { mealId ->
+//            viewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+            val isFavorite = viewModel.favoriteMealIds.value?.contains(mealId) ?: false
+            if (isFavorite) {
+                viewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+            } else {
+                viewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+            }
+        }
         val filterType = args.filterType
         val filterWord = args.filterWord
         if(filterType == FilterType.AREA.ordinal){
@@ -43,9 +49,16 @@ class MealsViewFragment : Fragment() {
         else{
             viewModel.getMealsByCategory(filterWord)
         }
-        viewModel.meals.observe(viewLifecycleOwner){ meals->
-            adapter.setList(meals)
+
+        viewModel.getFavoriteMealIds()
+        viewModel.meals.observe(viewLifecycleOwner) { meals ->
+            Log.d("MealsViewFragment", "Meals observed: ${meals.size}")
+            viewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+                Log.d("MealsViewFragment", "Favorite meal ids observed: ${favoriteMealIds.size}")
+                adapter.setList(meals, favoriteMealIds)
+            }
         }
+
         binding.mealsRecycler.adapter = adapter
         binding.mealsRecycler.layoutManager = LinearLayoutManager(requireContext())
 

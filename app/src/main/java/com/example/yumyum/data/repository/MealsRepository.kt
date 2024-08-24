@@ -19,6 +19,7 @@ interface MealsRepository{
     suspend fun insertFavoriteMeal(meal:FavoriteMeal)
     suspend fun insertCrossRef(crossRef: UserMealCrossRef)
     suspend fun getMealsByUsername(username:String):List<FavoriteMeal>
+    suspend fun getFavoriteMealIdsByUsername(username: String): List<String>
     suspend fun deleteFavoriteMeal(favoriteMeal: FavoriteMeal)
     suspend fun deleteCrossRef(username: String, idMeal: String)
 }

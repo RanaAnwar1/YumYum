@@ -32,6 +32,8 @@ class InstructionsFragment : Fragment() {
     private lateinit var playButton: ImageButton
     private lateinit var instructionDescription: TextView
     private lateinit var videoDialog: Dialog
+    private lateinit var toggleTextView: TextView
+    private var isExpanded = false
     private val instructionsViewModel: MealViewModel by viewModels({requireParentFragment()}) {
         MealViewModelFactory(
             MealsRepositoryImpl(RetrofitClient, ApplicationDatabase.getInstance(requireContext()))
@@ -44,12 +46,17 @@ class InstructionsFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_instructions, container, false)
 
+
         videoPreview = view.findViewById(R.id.videoPreview)
         playButton = view.findViewById(R.id.playButton)
         instructionDescription = view.findViewById(R.id.instructionDescription)
         videoDialog = Dialog(requireContext(), android.R.style.Theme_Dialog)
         videoDialog.setContentView(R.layout.dialog_video_player)
+        toggleTextView = view.findViewById(R.id.toggleTextView)
 
+        toggleTextView.setOnClickListener {
+            toggleDescription()
+        }
         instructionsViewModel.mealDetails.observe(viewLifecycleOwner) { meal ->
             val youtubeLink = meal.meals[0].strYoutube ?: ""
             Log.d("InstructionsFragment", "instructionViewModel youtube: $youtubeLink")
@@ -99,7 +106,18 @@ class InstructionsFragment : Fragment() {
 
         videoDialog.show()
     }
+    private fun toggleDescription() {
+        isExpanded = !isExpanded
 
+        if (isExpanded) {
+            instructionDescription.maxLines = Int.MAX_VALUE
+            toggleTextView.text = "See Less"
+        } else {
+            instructionDescription.maxLines = 3
+            toggleTextView.text = "See More"
+        }
+        instructionDescription.requestLayout()
+    }
     override fun onDestroy() {
         super.onDestroy()
         if (videoDialog.isShowing) {
