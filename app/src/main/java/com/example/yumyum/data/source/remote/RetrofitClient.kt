@@ -1,12 +1,9 @@
 package com.example.yumyum.data.source.remote
 
-import android.hardware.Camera.Area
-import androidx.lifecycle.LiveData
 import com.example.yumyum.data.model.Areas
 import com.example.yumyum.data.model.Categories
-import com.example.yumyum.data.model.FavoriteMeal
-import com.example.yumyum.data.model.Meal
 import com.example.yumyum.data.model.Meals
+import com.example.yumyum.data.model.ReturnedMeal
 import com.example.yumyum.data.model.SearchedMeal
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
@@ -41,11 +38,11 @@ object RetrofitClient : RemoteDataSource {
         return apiService.listAllMealsByCategory(category)
     }
 
-    override suspend fun searchMealByName(mealName: String): List<FavoriteMeal>{
+    override suspend fun searchMealByName(mealName: String): SearchedMeal{
         return apiService.searchMealByName(mealName)
     }
 
-    override suspend fun listMealDetailsByID(mealId: String): SearchedMeal {
+    override suspend fun listMealDetailsByID(mealId: String): ReturnedMeal {
         return apiService.listMealDetailsByID(mealId)
     }
 }

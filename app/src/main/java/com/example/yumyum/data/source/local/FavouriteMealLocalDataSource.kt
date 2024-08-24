@@ -14,6 +14,8 @@ interface FavouriteMealLocalDataSource {
 
     suspend fun insertCrossRef(crossRef: UserMealCrossRef)
 
-    // TODO: deleteFavoriteMeal 
+    suspend fun deleteFavoriteMeal(favoriteMeal: FavoriteMeal)
+
+    suspend fun deleteCrossRef(username: String, idMeal: String)
 
 }

@@ -1,11 +1,9 @@
 package com.example.yumyum.data.source.remote
 
-import androidx.lifecycle.LiveData
 import com.example.yumyum.data.model.Areas
 import com.example.yumyum.data.model.Categories
-import com.example.yumyum.data.model.FavoriteMeal
-import com.example.yumyum.data.model.Meal
 import com.example.yumyum.data.model.Meals
+import com.example.yumyum.data.model.ReturnedMeal
 import com.example.yumyum.data.model.SearchedMeal
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -30,12 +28,12 @@ interface ApiService {
     @GET("search.php")
     suspend fun searchMealByName(
         @Query("s") mealName: String
-    ): List<FavoriteMeal>
+    ): SearchedMeal
     //www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata
     @GET("lookup.php")
     suspend fun listMealDetailsByID(
         @Query("i") mealId: String
-    ): SearchedMeal
+    ): ReturnedMeal
     //www.themealdb.com/api/json/v1/1/lookup.php?i=52772
 
 }

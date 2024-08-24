@@ -2,6 +2,7 @@ package com.example.yumyum.ui.secondactivity.mealdetailsscreen.instructionsfragm
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,39 +11,68 @@ import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toolbar
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.yumyum.R
+import com.example.yumyum.data.repository.MealsRepositoryImpl
+import com.example.yumyum.data.source.local.ApplicationDatabase
+import com.example.yumyum.data.source.remote.RetrofitClient
+import com.example.yumyum.databinding.FragmentInstructionsBinding
+import com.example.yumyum.ui.secondactivity.MealViewModel
+import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 
 class InstructionsFragment : Fragment() {
-
+    private lateinit var videoPreview: ImageView
+    private lateinit var playButton: ImageButton
+    private lateinit var instructionDescription: TextView
     private lateinit var videoDialog: Dialog
-    private lateinit var video:ImageButton
+    private val instructionsViewModel: MealViewModel by viewModels({requireParentFragment()}) {
+        MealViewModelFactory(
+            MealsRepositoryImpl(RetrofitClient, ApplicationDatabase.getInstance(requireContext()))
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.fragment_instructions, container, false)
 
-        val youtubeLink = "https://www.youtube.com/watch?v=1IszT_guI08"
-        val embedLink = convertToEmbedLink(youtubeLink)
-        val thumbnailUrl = getYoutubeThumbnailUrl(youtubeLink)
-        videoDialog = Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        videoPreview = view.findViewById(R.id.videoPreview)
+        playButton = view.findViewById(R.id.playButton)
+        instructionDescription = view.findViewById(R.id.instructionDescription)
+        videoDialog = Dialog(requireContext(), android.R.style.Theme_Dialog)
         videoDialog.setContentView(R.layout.dialog_video_player)
 
-        val videoPreview: ImageView = view.findViewById(R.id.videoPreview)
-        video = view.findViewById(R.id.playButton)
-        Glide.with(this)
-            .load(thumbnailUrl)
-            .placeholder(R.drawable.empty) // Optional placeholder
-            .into(videoPreview)
+        instructionsViewModel.mealDetails.observe(viewLifecycleOwner) { meal ->
+            val youtubeLink = meal.meals[0].strYoutube ?: ""
+            Log.d("InstructionsFragment", "instructionViewModel youtube: $youtubeLink")
+            val embedLink = convertToEmbedLink(youtubeLink)
+            val thumbnailUrl = getYoutubeThumbnailUrl(youtubeLink)
 
-        video.setOnClickListener {
-            showVideoDialog(embedLink)
+            Glide.with(this)
+                .load(thumbnailUrl)
+                .placeholder(R.drawable.empty)
+                .into(videoPreview)
+
+            playButton.setOnClickListener {
+                showVideoDialog(embedLink)
+            }
+            instructionDescription.text = meal.meals[0].strInstructions
         }
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
 
     private fun convertToEmbedLink(youtubeLink: String): String {
@@ -55,13 +85,14 @@ class InstructionsFragment : Fragment() {
     }
 
     private fun showVideoDialog(embedLink: String) {
+
+
         val webView: WebView = videoDialog.findViewById(R.id.videoWebView)
         val btnClose: ImageButton = videoDialog.findViewById(R.id.btnClose)
 
         webView.webViewClient = WebViewClient()
         webView.settings.javaScriptEnabled = true
         webView.loadUrl(embedLink)
-
         btnClose.setOnClickListener {
             videoDialog.dismiss()
         }

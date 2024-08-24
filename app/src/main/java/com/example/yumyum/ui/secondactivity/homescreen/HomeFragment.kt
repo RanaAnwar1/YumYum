@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View{
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Hello, Rana"
+//        (activity as? AppCompatActivity)?.supportActionBar?.title = "Hello, Rana"
         binding = FragmentHomeBinding.inflate(layoutInflater,container,false)
         val areaAdapter = AreaAdapter{ area ->
             val action = HomeFragmentDirections.actionNavigationHomeToMealsViewFragment(FilterType.AREA.ordinal,area)

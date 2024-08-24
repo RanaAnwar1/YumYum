@@ -2,12 +2,14 @@ package com.example.yumyum.ui.secondactivity.mealsviewscreen
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.yumyum.R
 import com.example.yumyum.data.model.Meal
 import com.example.yumyum.databinding.MealItemViewBinding
+import com.example.yumyum.ui.secondactivity.searchscreen.SearchFragmentDirections
 
 
 class MealAdapter(val onClick:() -> Unit,val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
@@ -40,5 +42,14 @@ class MealAdapter(val onClick:() -> Unit,val onFavBtClicked:(mealId:String) -> U
                 onFavBtClicked(meals[position].idMeal)
             }
         }
+        holder.itemView.setOnClickListener {
+            val action = meals[position].idMeal.let { it1 ->
+                MealsViewFragmentDirections.actionMealsViewFragmentToNavigationMealDetails(
+                    it1
+                )
+            }
+            it.findNavController().navigate(action)
+        }
     }
+
 }
