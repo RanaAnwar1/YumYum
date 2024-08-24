@@ -40,7 +40,8 @@ class FavoriteFragment : Fragment() {
         recyclerViewFavorites.layoutManager = GridLayoutManager(context, 2)
         viewModel.getFavoriteMealsByUsername(Constant.USER_NAME)
         viewModel.favMeals.observe(viewLifecycleOwner){ favMeals ->
-            adapter.setList(favMeals)
+            //adapter.setList(favMeals)
+            adapter.favMealList = favMeals
         }
 
         binding.recyclerViewFavorites.adapter = adapter

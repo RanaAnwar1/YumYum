@@ -50,6 +50,10 @@ class MealsRepositoryImpl(
         return mealLocalDataSource.getFavoriteMealsByUsername(username)
     }
 
+    override suspend fun getFavoriteMealIdsByUsername(username: String): List<String> {
+        return mealLocalDataSource.getFavoriteMealIdsByUsername(username)
+    }
+
     override suspend fun deleteFavoriteMeal(favoriteMeal: FavoriteMeal) {
         mealLocalDataSource.deleteFavoriteMeal(favoriteMeal)
     }

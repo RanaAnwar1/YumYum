@@ -16,7 +16,8 @@ interface FavoriteMealDao {
 
   @Query("select * from FavoriteMeal where idMeal in ( select idMeal from UserMealCrossRef where username = :username)")
   suspend fun getFavoriteMealsByUsername(username: String): List<FavoriteMeal>
-
+  @Query("SELECT idMeal FROM FavoriteMeal WHERE idMeal IN (SELECT idMeal FROM UserMealCrossRef WHERE username = :username)")
+  suspend fun getFavoriteMealIdsByUsername(username: String): List<String>
   @Insert(onConflict = OnConflictStrategy.IGNORE)
   suspend fun insertCrossRef(crossRef: UserMealCrossRef)
   @Delete

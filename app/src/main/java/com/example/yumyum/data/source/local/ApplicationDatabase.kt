@@ -55,6 +55,10 @@ abstract class ApplicationDatabase : RoomDatabase(), FavouriteMealLocalDataSourc
         return FavoriteMealDao().getFavoriteMealsByUsername(username)
     }
 
+    override suspend fun getFavoriteMealIdsByUsername(username: String): List<String> {
+        return FavoriteMealDao().getFavoriteMealIdsByUsername(username)
+    }
+
     override suspend fun insertCrossRef(crossRef: UserMealCrossRef) {
         return FavoriteMealDao().insertCrossRef(crossRef)
     }

@@ -21,7 +21,7 @@ class MealSearchAdapter(
 ) : RecyclerView.Adapter<MealSearchAdapter.MealViewHolder>() {
 
 
-
+    private var favoriteMealIds: Set<String> = emptySet()
     class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mealName: TextView = itemView.findViewById(R.id.tvSearchedTitle)
         val mealImage: ImageView = itemView.findViewById(R.id.imgSearched)
@@ -36,10 +36,20 @@ class MealSearchAdapter(
 
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
         val meal = mealList[position]
+        val isFavorite = favoriteMealIds.contains(meal.idMeal)
         holder.mealName.text = meal.strMeal
         Glide.with(holder.itemView.context).load(meal.strMealThumb).into(holder.mealImage)
+        holder.mealFavBtn.setImageResource(
+            if (isFavorite) R.drawable.baseline_favorite_24
+            else R.drawable.baseline_favorite_border_24
+        )
+
         holder.mealFavBtn.setOnClickListener {
-            holder.mealFavBtn.setImageResource(R.drawable.baseline_favorite_24)
+            val newFavoriteStatus = !isFavorite
+            holder.mealFavBtn.setImageResource(
+                if (newFavoriteStatus) R.drawable.baseline_favorite_24
+                else R.drawable.baseline_favorite_border_24
+            )
             meal.idMeal?.let { it1 -> onFavBtClicked(it1) }
         }
         holder.itemView.setOnClickListener {
@@ -58,8 +68,9 @@ class MealSearchAdapter(
         return mealList.size
     }
 
-    fun updateMeals(newMealList: List<ReturnedMeals>) {
-        mealList = newMealList?: emptyList()
+    fun updateMeals(newMealList: List<ReturnedMeals>, favoriteIds: Set<String>) {
+        mealList = newMealList
+        favoriteMealIds = favoriteIds
         notifyDataSetChanged()
     }
 }

@@ -18,6 +18,7 @@ import com.example.yumyum.data.model.relation.UserMealCrossRef
 import com.example.yumyum.data.repository.MealsRepository
 import com.example.yumyum.data.repository.UserRepository
 import com.example.yumyum.ui.firstactivity.UserViewModel
+import com.example.yumyum.util.Constant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -49,8 +50,8 @@ class MealViewModel(
     private val _mealDetails = MutableLiveData<ReturnedMeal>()
     val mealDetails: LiveData<ReturnedMeal> get() = _mealDetails
 
-//    private val _mealsWithFavoriteStatus = MutableLiveData<List<FavoriteMeal>>()
-//    val mealsWithFavoriteStatus: LiveData<List<FavoriteMeal>> get() = _mealsWithFavoriteStatus
+    private val _favoriteMealIds = MutableLiveData<Set<String>>()
+    val favoriteMealIds: LiveData<Set<String>> get() = _favoriteMealIds
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -107,8 +108,8 @@ class MealViewModel(
 
     fun getFavoriteMealsByUsername(username: String){
         viewModelScope.launch(Dispatchers.IO) {
-            val result = async { repo.getMealsByUsername(username) }
-            _favMeals.postValue(result.await())
+            val meals = repo.getMealsByUsername(username)
+            _favMeals.postValue(meals)
         }
     }
 
@@ -144,6 +145,19 @@ class MealViewModel(
             val meal = result.await()
             repo.deleteFavoriteMeal(meal.meals[0])
             repo.deleteCrossRef(username,meal.meals[0].idMeal)
+            getFavoriteMealsByUsername(username)
+        }
+    }
+
+    fun getFavoriteMealIds() {
+        viewModelScope.launch {
+            try {
+                val ids = repo.getFavoriteMealIdsByUsername(Constant.USER_NAME)
+                _favoriteMealIds.postValue(ids.toSet())
+                Log.d("MealViewModel", "Favorite meal ids fetched: ${ids.size}")
+            } catch (e: Exception) {
+                Log.e("MealViewModel", "Error fetching favorite meal ids: ${e.message}")
+            }
         }
     }
 

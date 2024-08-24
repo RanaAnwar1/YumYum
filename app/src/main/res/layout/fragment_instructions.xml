@@ -47,9 +47,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad...Here are the steps to prepare the healthy taco salad..."
+        android:text="Here are the steps to prepare the healthy taco salad..."
         android:textColor="@android:color/black"
+        android:maxLines="3"
+        android:ellipsize="end"
         android:textSize="16sp" />
+    <TextView
+        android:id="@+id/toggleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="See More"
+        android:textColor="@color/gold_drop"
+        android:textSize="14sp"
+        android:paddingTop="8dp"/>
 
     <Space
         android:layout_width="match_parent"

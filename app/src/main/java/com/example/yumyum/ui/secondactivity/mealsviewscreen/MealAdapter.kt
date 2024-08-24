@@ -1,5 +1,6 @@
 package com.example.yumyum.ui.secondactivity.mealsviewscreen
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
@@ -12,17 +13,19 @@ import com.example.yumyum.databinding.MealItemViewBinding
 import com.example.yumyum.ui.secondactivity.searchscreen.SearchFragmentDirections
 
 
-class MealAdapter(val onClick:() -> Unit,val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
+class MealAdapter(val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
     var meals:List<Meal> = emptyList()
+    private var favoriteMealIds: Set<String> = emptySet()
     inner class MealViewHolder(val binding: MealItemViewBinding):RecyclerView.ViewHolder(binding.root)
 
-    fun setList(newList:List<Meal>){
+    fun setList(newList: List<Meal>, favoriteIds: Set<String>) {
         val difference = MealDiffUtil(meals,newList)
         val result = DiffUtil.calculateDiff(difference)
         result.dispatchUpdatesTo(this)
         meals = newList
-
+        favoriteMealIds = favoriteIds
+        notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
         val binding = MealItemViewBinding.inflate(LayoutInflater.from(parent.context),parent,false)
@@ -32,18 +35,30 @@ class MealAdapter(val onClick:() -> Unit,val onFavBtClicked:(mealId:String) -> U
     override fun getItemCount(): Int = meals.size
 
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
+        val meal = meals[position]
+        val isFavorite = favoriteMealIds.contains(meal.idMeal)
+        Log.d("MealAdapter", "Binding meal: ${meal.strMeal}")
         holder.binding.apply {
-            mealTitle.text = meals[position].strMeal
+            mealTitle.text = meal.strMeal
             Glide.with(holder.binding.root)
-                .load(meals[position].strMealThumb)
+                .load(meal.strMealThumb)
                 .into(mealImageView)
+            mealFavBt.setImageResource(
+                if (isFavorite) R.drawable.baseline_favorite_24
+                else R.drawable.baseline_favorite_border_24
+            )
+
             mealFavBt.setOnClickListener {
-                mealFavBt.setImageResource(R.drawable.baseline_favorite_24)
-                onFavBtClicked(meals[position].idMeal)
+                val newFavoriteStatus = !isFavorite
+                mealFavBt.setImageResource(
+                    if (newFavoriteStatus) R.drawable.baseline_favorite_24
+                    else R.drawable.baseline_favorite_border_24
+                )
+                onFavBtClicked(meal.idMeal)
             }
         }
         holder.itemView.setOnClickListener {
-            val action = meals[position].idMeal.let { it1 ->
+            val action = meal.idMeal.let { it1 ->
                 MealsViewFragmentDirections.actionMealsViewFragmentToNavigationMealDetails(
                     it1
                 )
@@ -51,5 +66,6 @@ class MealAdapter(val onClick:() -> Unit,val onFavBtClicked:(mealId:String) -> U
             it.findNavController().navigate(action)
         }
     }
+
 
 }

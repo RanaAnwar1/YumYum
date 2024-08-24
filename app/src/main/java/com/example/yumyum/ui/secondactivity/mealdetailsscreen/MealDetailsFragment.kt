@@ -31,6 +31,7 @@ class MealDetailsFragment : Fragment() {
     private lateinit var mealDetailsCoverPhoto :ImageView
     private lateinit var faviconbtn:ImageView
 
+
     private val MealDetailsViewModel: MealViewModel by viewModels {
         MealViewModelFactory(
             MealsRepositoryImpl(RetrofitClient, ApplicationDatabase.getInstance(requireContext()))
@@ -65,11 +66,32 @@ class MealDetailsFragment : Fragment() {
             mealDetailsCategory.text = meal.meals[0].strCategory
             Glide.with(this).load(meal.meals[0].strMealThumb).into(mealDetailsCoverPhoto)
         }
+        MealDetailsViewModel.getFavoriteMealIds()
+        MealDetailsViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+            val isFavorite = favoriteMealIds.contains(mealId)
+            faviconbtn.setImageResource(
+                if (isFavorite) R.drawable.baseline_favorite_24
+                else R.drawable.baseline_favorite_border_24
+            )
+        }
         faviconbtn.setOnClickListener {
             if (mealId != null) {
-                MealDetailsViewModel.insertFavoriteMealById(Constant.USER_NAME,mealId)
+                    MealDetailsViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+                    val isFavorite = favoriteMealIds.contains(mealId)
+                    faviconbtn.setImageResource(
+                        if (isFavorite) {
+                            MealDetailsViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId )
+                            R.drawable.baseline_favorite_border_24
+                        }
+                        else{
+                            MealDetailsViewModel.insertFavoriteMealById(Constant.USER_NAME,mealId)
+
+                            R.drawable.baseline_favorite_24
+                        }
+                    )
+                }
             }
-            faviconbtn.setImageResource(R.drawable.baseline_favorite_24)
+
         }
 
         val adapter = MealDetailsPagerAdapter(this)

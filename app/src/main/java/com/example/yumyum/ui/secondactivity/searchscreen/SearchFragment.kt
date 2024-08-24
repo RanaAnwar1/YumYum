@@ -36,7 +36,6 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
-
         return view
     }
 
@@ -46,7 +45,13 @@ class SearchFragment : Fragment() {
         val recyclerViewMeals = view.findViewById<RecyclerView>(R.id.recyclerViewSearchedMeals)
         recyclerViewMeals.layoutManager = LinearLayoutManager(context)
         mealSearchAdapter = MealSearchAdapter(emptyList()) { mealId ->
-            searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+//            searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+            val isFavorite = searchViewModel.favoriteMealIds.value?.contains(mealId) ?: false
+            if (isFavorite) {
+                searchViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+            } else {
+                searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+            }
         }
         recyclerViewMeals.adapter = mealSearchAdapter
 
@@ -65,9 +70,13 @@ class SearchFragment : Fragment() {
             }
         })
 
+        searchViewModel.getFavoriteMealIds()
         searchViewModel.searchResults.observe(viewLifecycleOwner, Observer { meals ->
             val mealsList = meals?.meals ?: emptyList()
-            mealSearchAdapter.updateMeals(mealsList)
+            searchViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+                mealSearchAdapter.updateMeals(mealsList, favoriteMealIds.toSet())
+            }
         })
+
     }
 }
