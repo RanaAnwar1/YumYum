@@ -1,5 +1,6 @@
 package com.example.yumyum.ui.secondactivity.mealdetailsscreen.instructionsfragment
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
@@ -91,12 +92,10 @@ class InstructionsFragment : Fragment() {
         return "https://img.youtube.com/vi/$videoId/hqdefault.jpg"
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun showVideoDialog(embedLink: String) {
-
-
         val webView: WebView = videoDialog.findViewById(R.id.videoWebView)
         val btnClose: ImageButton = videoDialog.findViewById(R.id.btnClose)
-
         webView.webViewClient = WebViewClient()
         webView.settings.javaScriptEnabled = true
         webView.loadUrl(embedLink)

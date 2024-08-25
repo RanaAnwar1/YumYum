@@ -2,12 +2,12 @@ package com.example.yumyum.ui.secondactivity.mealdetailsscreen
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -26,10 +26,10 @@ class MealDetailsFragment : Fragment() {
     private lateinit var mealId: String
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
-    private lateinit var mealDetailsTitle : TextView
-    private lateinit var mealDetailsCategory :TextView
-    private lateinit var mealDetailsCoverPhoto :ImageView
-    private lateinit var faviconbtn:ImageView
+    private lateinit var mealDetailsTitle: TextView
+    private lateinit var mealDetailsCategory: TextView
+    private lateinit var mealDetailsCoverPhoto: ImageView
+    private lateinit var faviconbtn: ImageView
 
 
     private val MealDetailsViewModel: MealViewModel by viewModels {
@@ -55,7 +55,7 @@ class MealDetailsFragment : Fragment() {
         mealDetailsTitle = view.findViewById(R.id.mealDetailsTitle)
         mealDetailsCategory = view.findViewById(R.id.mealDetailsCategory)
         mealDetailsCoverPhoto = view.findViewById(R.id.mealDetailsCoverPhoto)
-        faviconbtn =view.findViewById(R.id.btnFavorite)
+        faviconbtn = view.findViewById(R.id.btnFavorite)
         val mealId = arguments?.getString("mealId")
         mealId?.let {
             MealDetailsViewModel.fetchMealDetails(it)
@@ -76,22 +76,19 @@ class MealDetailsFragment : Fragment() {
         }
         faviconbtn.setOnClickListener {
             if (mealId != null) {
-                    MealDetailsViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+                MealDetailsViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
                     val isFavorite = favoriteMealIds.contains(mealId)
                     faviconbtn.setImageResource(
                         if (isFavorite) {
-                            MealDetailsViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId )
+                            MealDetailsViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
                             R.drawable.baseline_favorite_border_24
-                        }
-                        else{
-                            MealDetailsViewModel.insertFavoriteMealById(Constant.USER_NAME,mealId)
-
+                        } else {
+                            MealDetailsViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
                             R.drawable.baseline_favorite_24
                         }
                     )
                 }
             }
-
         }
 
         val adapter = MealDetailsPagerAdapter(this)
