@@ -37,27 +37,40 @@ class HomeFragment : Fragment() {
     ): View{
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Hello"
         binding = FragmentHomeBinding.inflate(layoutInflater,container,false)
+        setupAreaAdapter()
+        setupCategoryAdapter()
+        return binding.root
+    }
+
+    private fun setupAreaAdapter(){
         val areaAdapter = AreaAdapter{ area ->
-            val action = HomeFragmentDirections.actionNavigationHomeToMealsViewFragment(FilterType.AREA.ordinal,area)
-            findNavController().navigate(action)
+            HomeFragmentDirections
+                .actionNavigationHomeToMealsViewFragment(FilterType.AREA.ordinal,area)
+                .apply {
+                    findNavController().navigate(this)
+                }
         }
         viewModel.getAllAreas()
-        viewModel.areas.observe(viewLifecycleOwner){
-            areaAdapter.setList(it.meals)
+        viewModel.areas.observe(viewLifecycleOwner){ areas ->
+            areaAdapter.areas = areas.meals
         }
         binding.areaRecycler.adapter = areaAdapter
         binding.areaRecycler.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+    }
+
+    private fun setupCategoryAdapter(){
         val categoryAdapter = CategoryAdapter{category ->
-            val action = HomeFragmentDirections.actionNavigationHomeToMealsViewFragment(FilterType.CATEGORY.ordinal,category)
-            findNavController().navigate(action)
+            HomeFragmentDirections
+                .actionNavigationHomeToMealsViewFragment(FilterType.CATEGORY.ordinal,category)
+                .apply {
+                    findNavController().navigate(this)
+                }
         }
         viewModel.getAllCategories()
         viewModel.categories.observe(viewLifecycleOwner){categories ->
-            categoryAdapter.setList(categories.categories)
+            categoryAdapter.categories = categories.categories
         }
         binding.categoryRecycler.adapter = categoryAdapter
         binding.categoryRecycler.layoutManager = LinearLayoutManager(requireContext())
-
-        return binding.root
     }
 }

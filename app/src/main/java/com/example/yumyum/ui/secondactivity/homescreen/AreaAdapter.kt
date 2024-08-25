@@ -12,15 +12,17 @@ import com.example.yumyum.ui.secondactivity.mealsviewscreen.MealDiffUtil
 
 class AreaAdapter(val onClick:(area:String) -> Unit):RecyclerView.Adapter<AreaAdapter.AreaViewHolder>() {
 
-    private var areas:List<Area> = emptyList()
+
     inner class AreaViewHolder(val binding:ViewItemAreaBinding):RecyclerView.ViewHolder(binding.root)
 
-    fun setList(newList:List<Area>){
-        val difference = AreaDiffUtil(areas,newList)
-        val result = DiffUtil.calculateDiff(difference)
-        result.dispatchUpdatesTo(this)
-        areas = newList
-    }
+    var areas:List<Area> = emptyList()
+        set(value) {
+            val difference = AreaDiffUtil(field,value)
+            val result = DiffUtil.calculateDiff(difference)
+            result.dispatchUpdatesTo(this)
+            field = value
+        }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AreaViewHolder {
         val binding = ViewItemAreaBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return AreaViewHolder(binding)

@@ -3,6 +3,7 @@ package com.example.yumyum.ui.secondactivity.mealsviewscreen
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +26,6 @@ class MealAdapter(val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapt
         result.dispatchUpdatesTo(this)
         meals = newList
         favoriteMealIds = favoriteIds
-        notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
         val binding = MealItemViewBinding.inflate(LayoutInflater.from(parent.context),parent,false)
@@ -37,7 +37,6 @@ class MealAdapter(val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapt
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
         val meal = meals[position]
         val isFavorite = favoriteMealIds.contains(meal.idMeal)
-        Log.d("MealAdapter", "Binding meal: ${meal.strMeal}")
         holder.binding.apply {
             mealTitle.text = meal.strMeal
             Glide.with(holder.binding.root)
@@ -50,6 +49,7 @@ class MealAdapter(val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapt
 
             mealFavBt.setOnClickListener {
                 val newFavoriteStatus = !isFavorite
+                Toast.makeText(holder.binding.root.context,"clicked",Toast.LENGTH_SHORT).show()
                 mealFavBt.setImageResource(
                     if (newFavoriteStatus) R.drawable.baseline_favorite_24
                     else R.drawable.baseline_favorite_border_24
@@ -58,10 +58,8 @@ class MealAdapter(val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapt
             }
         }
         holder.itemView.setOnClickListener {
-            val action = meal.idMeal.let { it1 ->
-                MealsViewFragmentDirections.actionMealsViewFragmentToNavigationMealDetails(
-                    it1
-                )
+            val action = meal.idMeal.let { mealId ->
+                MealsViewFragmentDirections.actionMealsViewFragmentToNavigationMealDetails(mealId)
             }
             it.findNavController().navigate(action)
         }
