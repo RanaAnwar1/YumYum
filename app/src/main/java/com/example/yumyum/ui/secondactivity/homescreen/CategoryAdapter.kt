@@ -11,16 +11,16 @@ import com.example.yumyum.databinding.CardCategoryBinding
 
 class CategoryAdapter(val onClick:(category:String) -> Unit): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
-    private var categories:List<Category> = emptyList()
     inner class CategoryViewHolder(val binding: CardCategoryBinding): RecyclerView.ViewHolder(binding.root)
 
+     var categories:List<Category> = emptyList()
+        set(value) {
+            val difference = CategoryDiffUtil(field,value)
+            val result = DiffUtil.calculateDiff(difference)
+            result.dispatchUpdatesTo(this)
+            field = value
+        }
 
-    fun setList(newList:List<Category>){
-        val difference = CategoryDiffUtil(categories,newList)
-        val result = DiffUtil.calculateDiff(difference)
-        result.dispatchUpdatesTo(this)
-        categories = newList
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding = CardCategoryBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return CategoryViewHolder(binding)

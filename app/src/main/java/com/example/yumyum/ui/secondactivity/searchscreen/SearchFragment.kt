@@ -16,6 +16,7 @@ import com.example.yumyum.R
 import com.example.yumyum.data.repository.MealsRepositoryImpl
 import com.example.yumyum.data.source.local.ApplicationDatabase
 import com.example.yumyum.data.source.remote.RetrofitClient
+import com.example.yumyum.databinding.FragmentSearchBinding
 import com.example.yumyum.ui.secondactivity.MealViewModel
 import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 import com.example.yumyum.ui.secondactivity.mealsviewscreen.MealAdapter
@@ -25,6 +26,7 @@ import com.google.android.material.textfield.TextInputEditText
 class SearchFragment : Fragment() {
 
     private lateinit var mealSearchAdapter: MealSearchAdapter
+    private lateinit var binding: FragmentSearchBinding
     private val searchViewModel: MealViewModel by viewModels {
         MealViewModelFactory(
             MealsRepositoryImpl(RetrofitClient, ApplicationDatabase.getInstance(requireContext()))
@@ -32,18 +34,32 @@ class SearchFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_search, container, false)
-        return view
+        binding = FragmentSearchBinding.inflate(layoutInflater,container,false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerViewMeals = view.findViewById<RecyclerView>(R.id.recyclerViewSearchedMeals)
-        recyclerViewMeals.layoutManager = LinearLayoutManager(context)
+        setRecycler()
+        setSearchBar()
+
+        searchViewModel.getFavoriteMealIds()
+        searchViewModel.searchResults.observe(viewLifecycleOwner, Observer { meals ->
+            val mealsList = meals?.meals ?: emptyList()
+            searchViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+                mealSearchAdapter.updateMeals(mealsList, favoriteMealIds.toSet())
+            }
+        })
+
+    }
+
+    private fun setRecycler(){
+        binding.recyclerViewSearchedMeals.layoutManager = LinearLayoutManager(context)
         mealSearchAdapter = MealSearchAdapter(emptyList()) { mealId ->
 //            searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
             val isFavorite = searchViewModel.favoriteMealIds.value?.contains(mealId) ?: false
@@ -53,11 +69,10 @@ class SearchFragment : Fragment() {
                 searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
             }
         }
-        recyclerViewMeals.adapter = mealSearchAdapter
-
-        val searchBar = view.findViewById<TextInputEditText>(R.id.materialSearchBar)
-
-        searchBar.addTextChangedListener(object : TextWatcher {
+        binding.recyclerViewSearchedMeals.adapter = mealSearchAdapter
+    }
+    private fun setSearchBar(){
+        binding.materialSearchBar.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val query = s.toString()
                 searchViewModel.submitQuery(query)
@@ -69,14 +84,5 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
-
-        searchViewModel.getFavoriteMealIds()
-        searchViewModel.searchResults.observe(viewLifecycleOwner, Observer { meals ->
-            val mealsList = meals?.meals ?: emptyList()
-            searchViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
-                mealSearchAdapter.updateMeals(mealsList, favoriteMealIds.toSet())
-            }
-        })
-
     }
 }

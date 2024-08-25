@@ -23,6 +23,7 @@ import com.example.yumyum.util.FilterType
 class MealsViewFragment : Fragment() {
 
     lateinit var binding:FragmentMealsViewBinding
+    lateinit var adapter: MealAdapter
     private val args: MealsViewFragmentArgs by navArgs()
     private val viewModel:MealViewModel by viewModels {
         MealViewModelFactory(MealsRepositoryImpl(RetrofitClient,ApplicationDatabase.getInstance(requireContext())))
@@ -32,8 +33,14 @@ class MealsViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMealsViewBinding.inflate(layoutInflater,container,false)
-        val adapter = MealAdapter { mealId ->
-//            viewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+        setupMealAdapter()
+        setTheMealSource()
+        return binding.root
+    }
+
+    private fun setupMealAdapter(){
+        viewModel.getFavoriteMealIds()
+        adapter = MealAdapter { mealId ->
             val isFavorite = viewModel.favoriteMealIds.value?.contains(mealId) ?: false
             if (isFavorite) {
                 viewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
@@ -41,28 +48,22 @@ class MealsViewFragment : Fragment() {
                 viewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
             }
         }
+        binding.mealsRecycler.adapter = adapter
+        binding.mealsRecycler.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    private fun setTheMealSource(){
         val filterType = args.filterType
         val filterWord = args.filterWord
-        if(filterType == FilterType.AREA.ordinal){
+        if(filterType == FilterType.AREA.ordinal)
             viewModel.getMealsByArea(filterWord)
-        }
-        else{
+        else
             viewModel.getMealsByCategory(filterWord)
-        }
-
-        viewModel.getFavoriteMealIds()
         viewModel.meals.observe(viewLifecycleOwner) { meals ->
-            Log.d("MealsViewFragment", "Meals observed: ${meals.size}")
             viewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
-                Log.d("MealsViewFragment", "Favorite meal ids observed: ${favoriteMealIds.size}")
                 adapter.setList(meals, favoriteMealIds)
             }
         }
-
-        binding.mealsRecycler.adapter = adapter
-        binding.mealsRecycler.layoutManager = LinearLayoutManager(requireContext())
-
-        return binding.root
     }
 
 }
