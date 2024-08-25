@@ -61,7 +61,6 @@ class LoginFragment : Fragment() {
                 Toast.makeText(requireContext(), "User is not available please sign up", Toast.LENGTH_LONG).show()
         }
 
-
         viewModel.password.observe(viewLifecycleOwner){ actualPassword ->
             if(actualPassword == password){
                 if(binding.loginRemembermeCb.isChecked) {

@@ -1,5 +1,6 @@
 package com.example.yumyum.ui.secondactivity.favoritescreen
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -47,11 +48,15 @@ class FavAdapter(
                 Toast.makeText(root.context, "clicked", Toast.LENGTH_SHORT).show()
             }
             imgFavoriteIcon.setImageResource(R.drawable.baseline_favorite_24)
-
         }
         holder.binding.imgFavoriteIcon.setOnClickListener {
-            holder.binding.imgFavoriteIcon.setImageResource(R.drawable.baseline_favorite_border_24)
-            viewModel.deleteMealFromFavorites(Constant.USER_NAME, favMealList[position].idMeal )
+           try {
+                holder.binding.imgFavoriteIcon.setImageResource(R.drawable.baseline_favorite_border_24)
+                viewModel.deleteMealFromFavorites(Constant.USER_NAME, favMealList[position].idMeal )
+            }catch (e: Exception){
+                Log.e("Favorite Screen", "Favorite button : ${e.message}")
+            }
+
         }
 
         holder.itemView.setOnClickListener {

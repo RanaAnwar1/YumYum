@@ -44,22 +44,10 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setRecycler()
         setSearchBar()
 
-        searchViewModel.getFavoriteMealIds()
-        searchViewModel.searchResults.observe(viewLifecycleOwner, Observer { meals ->
-            val mealsList = meals?.meals ?: emptyList()
-            searchViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
-                mealSearchAdapter.updateMeals(mealsList, favoriteMealIds.toSet())
-            }
-        })
 
-    }
-
-    private fun setRecycler(){
-        binding.recyclerViewSearchedMeals.layoutManager = LinearLayoutManager(context)
         mealSearchAdapter = MealSearchAdapter(emptyList()) { mealId ->
 //            searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
             val isFavorite = searchViewModel.favoriteMealIds.value?.contains(mealId) ?: false
@@ -70,6 +58,14 @@ class SearchFragment : Fragment() {
             }
         }
         binding.recyclerViewSearchedMeals.adapter = mealSearchAdapter
+        searchViewModel.getFavoriteMealIds()
+        searchViewModel.searchResults.observe(viewLifecycleOwner, Observer { meals ->
+            val mealsList = meals?.meals ?: emptyList()
+            searchViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+                mealSearchAdapter.updateMeals(mealsList, favoriteMealIds.toSet())
+            }
+        })
+
     }
     private fun setSearchBar(){
         binding.materialSearchBar.addTextChangedListener(object : TextWatcher {
@@ -84,5 +80,19 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
+
+    }
+    private fun setRecycler(){
+        binding.recyclerViewSearchedMeals.layoutManager = LinearLayoutManager(context)
+        mealSearchAdapter = MealSearchAdapter(emptyList()) { mealId ->
+//            searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+            val isFavorite = searchViewModel.favoriteMealIds.value?.contains(mealId) ?: false
+            if (isFavorite) {
+                searchViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+            } else {
+                searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+            }
+        }
+        binding.recyclerViewSearchedMeals.adapter = mealSearchAdapter
     }
 }

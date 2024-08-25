@@ -131,8 +131,8 @@ class MealViewModel(
     fun getFavoriteMealsByUsername(username: String){
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val meals = async {repo.getMealsByUsername(username)}
-                _favMeals.postValue(meals.await())
+                val meals = repo.getMealsByUsername(username)
+                _favMeals.postValue(meals)
             } catch (e: Exception) {
                 Log.e("MealViewModel", "Error retrieving favorites: ${e.message}")
             }
@@ -182,8 +182,8 @@ class MealViewModel(
     fun getFavoriteMealIds() {
         viewModelScope.launch {
             try {
-                val ids = async {repo.getFavoriteMealIdsByUsername(Constant.USER_NAME)}
-                _favoriteMealIds.postValue(ids.await().toSet())
+                val ids = repo.getFavoriteMealIdsByUsername(Constant.USER_NAME)
+                _favoriteMealIds.postValue(ids.toSet())
             } catch (e: Exception) {
                 Log.e("MealViewModel", "Error fetching favorite meal ids: ${e.message}")
             }

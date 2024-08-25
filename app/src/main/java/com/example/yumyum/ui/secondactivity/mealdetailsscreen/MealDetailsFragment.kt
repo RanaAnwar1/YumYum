@@ -88,6 +88,7 @@ class MealDetailsFragment : Fragment() {
                         }
                     )
                 }
+                MealDetailsViewModel.getFavoriteMealIds()
             }
         }
 

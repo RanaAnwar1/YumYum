@@ -107,7 +107,6 @@ class InstructionsFragment : Fragment() {
     }
     private fun toggleDescription() {
         isExpanded = !isExpanded
-
         if (isExpanded) {
             instructionDescription.maxLines = Int.MAX_VALUE
             toggleTextView.text = "See Less"
