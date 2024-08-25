@@ -17,26 +17,19 @@ import com.example.yumyum.ui.secondactivity.searchscreen.SearchFragmentDirection
 import com.example.yumyum.util.Constant
 
 class FavAdapter(
-    private val viewModel: MealViewModel,
-    private val onClick: () -> Unit)
-    :RecyclerView.Adapter<FavAdapter.FavViewHolder>() {
+    private val viewModel: MealViewModel
+) :RecyclerView.Adapter<FavAdapter.FavViewHolder>() {
 
-   // var favMealList = emptyList<FavoriteMeal>()
     inner class FavViewHolder(val binding: ItemMealViewBinding):RecyclerView.ViewHolder(binding.root)
 
-//    fun setList(newList:List<FavoriteMeal>){
-//        val difference = FavDiffUtil(favMealList,newList)
-//        val result = DiffUtil.calculateDiff(difference)
-//        result.dispatchUpdatesTo(this)
-//        favMealList = newList
-//    }
+
     var favMealList = emptyList<FavoriteMeal>()
-    set(value) {
-        val diffCallback = FavDiffUtil(favMealList, value)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        field = value
-        diffResult.dispatchUpdatesTo(this)
-    }
+        set(value) {
+            val diffCallback = FavDiffUtil(favMealList, value)
+            val diffResult = DiffUtil.calculateDiff(diffCallback)
+            field = value
+            diffResult.dispatchUpdatesTo(this)
+        }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavViewHolder {
         val binding = ItemMealViewBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return FavViewHolder(binding)
