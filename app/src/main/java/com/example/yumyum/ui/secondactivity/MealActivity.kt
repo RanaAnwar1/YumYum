@@ -25,7 +25,6 @@ class MealActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var navController: NavController
-
     private lateinit var binding: ActivityMealBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +35,8 @@ class MealActivity : AppCompatActivity() {
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        supportActionBar?.title = "Hello"
 
-        supportActionBar?.title = "Hi, Name"
         val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_bottom_navigation) as NavHostFragment
         navController = navHost.navController
 
@@ -55,17 +54,15 @@ class MealActivity : AppCompatActivity() {
             navController.navigate(R.id.navigation_search)
         }
 
-        bottomAppBar.setNavigationOnClickListener {
-            Toast.makeText(this, "BottomAppBar Navigation Clicked", Toast.LENGTH_SHORT).show()
-        }
-
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.navigation_home, R.id.navigation_favorite -> {
                     bottomAppBar.visibility = View.VISIBLE
+                    fab.visibility = View.VISIBLE
                 }
                 else -> {
                     bottomAppBar.visibility = View.GONE
+                    fab.visibility = View.GONE
                 }
             }
         }
@@ -86,18 +83,6 @@ class MealActivity : AppCompatActivity() {
                 else -> false
             }
 
-        }
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.navigation_search -> {
-                    bottomNavigationView.menu.setGroupCheckable(0, false, true)
-                }
-
-                else -> {
-                    bottomNavigationView.menu.setGroupCheckable(0, true, true)
-                }
-            }
         }
     }
 

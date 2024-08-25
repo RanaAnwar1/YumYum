@@ -39,7 +39,6 @@ class CategoryAdapter(val onClick:(category:String) -> Unit): RecyclerView.Adapt
             }
         }
 
-
     }
 
 }

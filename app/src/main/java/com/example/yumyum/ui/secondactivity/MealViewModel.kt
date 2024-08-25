@@ -20,6 +20,7 @@ import com.example.yumyum.data.repository.UserRepository
 import com.example.yumyum.ui.firstactivity.UserViewModel
 import com.example.yumyum.util.Constant
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.debounce
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+@OptIn(FlowPreview::class)
 class MealViewModel(
     private val repo:MealsRepository
 ):ViewModel() {
@@ -56,7 +58,7 @@ class MealViewModel(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             queryChannel.receiveAsFlow()
-                .debounce(300)
+                .debounce(1000)
                 .distinctUntilChanged()
                 .collect { query ->
                     searchMealByName(query)
@@ -65,51 +67,75 @@ class MealViewModel(
     }
     fun getAllAreas(){
         viewModelScope.launch (Dispatchers.IO){
+            try {
             val result = async { repo.getAreas() }
             _areas.postValue(result.await())
+            } catch (e: Exception) {
+                Log.e("MealViewModel", "Error retrieving all areas: ${e.message}")
+            }
         }
     }
 
     fun getAllCategories(){
         viewModelScope.launch(Dispatchers.IO) {
+            try {
             val result = async { repo.getCategories() }
             _categories.postValue(result.await())
             Log.d("viewmodel_logging",result.await().categories.toString())
+            } catch (e: Exception) {
+                Log.e("MealViewModel", "Error retrieving all categories: ${e.message}")
+            }
         }
     }
 
     fun getMealsByArea(area: String){
         viewModelScope.launch(Dispatchers.IO) {
+            try {
             val result = async { repo.getMealsByAreas(area) }
             _meals.postValue(result.await())
             Log.d("viewmodel_logging",result.await().toString())
+            } catch (e: Exception) {
+                Log.e("MealViewModel", "Error retrieving meals by area: ${e.message}")
+            }
 
         }
     }
 
     fun getMealsByCategory(category:String){
         viewModelScope.launch (Dispatchers.IO){
+            try {
             val result = async { repo.getMealsByCategories(category) }
             _meals.postValue(result.await())
             Log.d("viewmodel_logging",result.await().toString())
+            } catch (e: Exception) {
+                Log.e("MealViewModel", "Error retrieving meals by category: ${e.message}")
+            }
         }
     }
 
     fun insertFavoriteMealById(username:String,mealId:String){
         viewModelScope.launch(Dispatchers.IO) {
-            val result = async { repo.getMealById(mealId) }
-            val meal = result.await()
-            Log.d("checking_database",meal.toString())
-            repo.insertFavoriteMeal(meal.meals[0])
-            val crossRef = UserMealCrossRef(username,meal.meals[0].idMeal)
-            repo.insertCrossRef(crossRef)
+            try {
+                val result = async { repo.getMealById(mealId) }
+                val meal = result.await()
+                Log.d("checking_database", meal.toString())
+                repo.insertFavoriteMeal(meal.meals[0])
+                val crossRef = UserMealCrossRef(username, meal.meals[0].idMeal)
+                repo.insertCrossRef(crossRef)
+            }catch (e: Exception) {
+            Log.e("MealViewModel", "Error inserting favorites: ${e.message}")
+            }
         }
     }
 
     fun getFavoriteMealsByUsername(username: String){
         viewModelScope.launch(Dispatchers.IO) {
-            val meals = repo.getMealsByUsername(username)
-            _favMeals.postValue(meals)
+            try {
+                val meals = async {repo.getMealsByUsername(username)}
+                _favMeals.postValue(meals.await())
+            } catch (e: Exception) {
+                Log.e("MealViewModel", "Error retrieving favorites: ${e.message}")
+            }
         }
     }
 
@@ -118,9 +144,9 @@ class MealViewModel(
             try {
                 val result = async { repo.searchMealByName(mealName) }
                 _searchResults.postValue(result.await())
-                Log.d("viewmodel_logging", result.await().toString())
+                Log.d("MealViewModel", result.await().toString())
             } catch (e: Exception) {
-                Log.e("viewmodel_logging", "Error searching for meal: ${e.message}")
+                Log.e("MealViewModel", "Error searching for meal: ${e.message}")
             }
         }
     }
@@ -132,29 +158,32 @@ class MealViewModel(
             try {
                 val result = async { repo.getMealById(mealId) }
                 _mealDetails.postValue(result.await())
-                Log.d("viewmodel_logging", result.await().meals[0].toString())
+                Log.d("MealViewModel", result.await().meals[0].toString())
             } catch (e: Exception) {
-                Log.e("viewmodel_logging", "Error fetching meal details: ${e.message}")
+                Log.e("MealViewModel", "Error fetching meal details: ${e.message}")
             }
         }
     }
     fun deleteMealFromFavorites(username: String, mealId: String)
     {
         viewModelScope.launch (Dispatchers.IO){
-            val result = async { repo.getMealById(mealId) }
-            val meal = result.await()
-            repo.deleteFavoriteMeal(meal.meals[0])
-            repo.deleteCrossRef(username,meal.meals[0].idMeal)
-            getFavoriteMealsByUsername(username)
+            try {
+                val result = async { repo.getMealById(mealId) }
+                val meal = result.await()
+                repo.deleteFavoriteMeal(meal.meals[0])
+                repo.deleteCrossRef(username,meal.meals[0].idMeal)
+                getFavoriteMealsByUsername(username)
+            } catch (e: Exception) {
+                Log.e("MealViewModel", "Error deleting from favorites: ${e.message}")
+            }
         }
     }
 
     fun getFavoriteMealIds() {
         viewModelScope.launch {
             try {
-                val ids = repo.getFavoriteMealIdsByUsername(Constant.USER_NAME)
-                _favoriteMealIds.postValue(ids.toSet())
-                Log.d("MealViewModel", "Favorite meal ids fetched: ${ids.size}")
+                val ids = async {repo.getFavoriteMealIdsByUsername(Constant.USER_NAME)}
+                _favoriteMealIds.postValue(ids.await().toSet())
             } catch (e: Exception) {
                 Log.e("MealViewModel", "Error fetching favorite meal ids: ${e.message}")
             }
