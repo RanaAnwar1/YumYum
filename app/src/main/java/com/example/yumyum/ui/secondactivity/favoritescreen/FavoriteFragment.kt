@@ -40,7 +40,6 @@ class FavoriteFragment : Fragment() {
         viewModel.favMeals.observe(viewLifecycleOwner){ favMeals ->
             adapter.favMealList = favMeals
         }
-
         binding.recyclerViewFavorites.adapter = adapter
         binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(requireContext())
         return binding.root
