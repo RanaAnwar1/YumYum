@@ -2,9 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.YumYum" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/mystic</item>
-
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorButtonNormal">@color/gold_drop</item>
     </style>
     <style name="CustomNavigation" parent="Theme.MaterialComponents"/>
     <style name="Theme.YumYum" parent="Base.Theme.YumYum" />

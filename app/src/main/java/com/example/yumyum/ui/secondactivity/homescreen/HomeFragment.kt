@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.transition.Visibility
 import com.example.yumyum.R
 import com.example.yumyum.data.model.Area
 import com.example.yumyum.data.repository.MealsRepositoryImpl
@@ -34,7 +35,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View{
-//        (activity as? AppCompatActivity)?.supportActionBar?.title = "Hello, Rana"
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "Hello"
         binding = FragmentHomeBinding.inflate(layoutInflater,container,false)
         val areaAdapter = AreaAdapter{ area ->
             val action = HomeFragmentDirections.actionNavigationHomeToMealsViewFragment(FilterType.AREA.ordinal,area)

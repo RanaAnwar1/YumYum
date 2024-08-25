@@ -4,12 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/mystic"
     android:padding="16dp">
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search for meals">
+        android:hint="Search for meals"
+        app:startIconDrawable="@drawable/baseline_search_24"
+        style="@style/YamYamTextInputLayout"
+        android:textColor="@color/heavy_metal">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/materialSearchBar"
@@ -17,8 +21,7 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:imeOptions="actionSearch"
-
-            />
+            android:textColor="@color/heavy_metal" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.recyclerview.widget.RecyclerView
