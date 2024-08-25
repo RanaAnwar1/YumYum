@@ -1,5 +1,6 @@
 package com.example.yumyum.ui.secondactivity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -15,6 +16,8 @@ import com.example.yumyum.R
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.yumyum.databinding.ActivityMealBinding
+import com.example.yumyum.ui.firstactivity.MainActivity
+import com.example.yumyum.util.Constant
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -111,8 +114,9 @@ class MealActivity : AppCompatActivity() {
             }
             R.id.navigation_signout -> {
                 Toast.makeText(this, "Signed out successfully", Toast.LENGTH_SHORT).show()
-                navController.navigate(R.id.loginFragment)
+                navigateToUserActivity()
                 finish()
+                Constant.REQUESTED_SIGN_OUT = true
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -121,5 +125,11 @@ class MealActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    private fun navigateToUserActivity(){
+        Intent(this,MainActivity::class.java).apply {
+            startActivity(this)
+        }
     }
 }

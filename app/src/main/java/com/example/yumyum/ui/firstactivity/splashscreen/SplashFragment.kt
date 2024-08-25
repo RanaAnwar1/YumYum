@@ -24,7 +24,10 @@ class SplashFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        if(Constant.REQUESTED_SIGN_OUT)
+            editSharedPref()
+
         binding = FragmentSplashBinding.inflate(layoutInflater,container,false)
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -38,11 +41,25 @@ class SplashFragment : Fragment() {
         val loggedUser = sharedPref?.getBoolean(Constant.IS_USER_LOGGED,false)
         Constant.USER_NAME = sharedPref?.getString(Constant.SAVED_USER_NAME_KEY,"non").toString()
         if(loggedUser == true ){
-            findNavController().navigate(R.id.action_splashFragment_to_mealActivity)
+            navigate(R.id.action_splashFragment_to_mealActivity)
         }else{
-            findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+            navigate(R.id.action_splashFragment_to_loginFragment)
         }
 
+    }
+
+    private fun editSharedPref(){
+        val sharedPref =
+            activity?.getSharedPreferences(Constant.SHARED_PREF_KEY, MODE_PRIVATE)
+        sharedPref?.edit()?.apply {
+            putBoolean(Constant.IS_USER_LOGGED, false)
+            putString(Constant.SAVED_USER_NAME_KEY,"")
+        }?.apply()
+        Constant.USER_NAME = ""
+    }
+
+    private fun navigate(destination:Int){
+        findNavController().navigate(destination)
     }
 
 

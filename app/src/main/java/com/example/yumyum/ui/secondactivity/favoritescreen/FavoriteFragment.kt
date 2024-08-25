@@ -31,16 +31,13 @@ class FavoriteFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFavoriteBinding.inflate(layoutInflater,container,false)
-        val adapter = FavAdapter(viewModel){
-
-        }
+        val adapter = FavAdapter(viewModel)
         recyclerViewFavorites = binding.recyclerViewFavorites
         recyclerViewFavorites.layoutManager = GridLayoutManager(context, 2)
         viewModel.getFavoriteMealsByUsername(Constant.USER_NAME)
         viewModel.favMeals.observe(viewLifecycleOwner){ favMeals ->
-            //adapter.setList(favMeals)
             adapter.favMealList = favMeals
         }
 

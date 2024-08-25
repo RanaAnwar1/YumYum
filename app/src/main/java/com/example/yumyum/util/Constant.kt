@@ -10,4 +10,5 @@ object Constant {
     const val FILTER_BY_CATEGORY = "Category"
     var USER_NAME = ""
     const val SAVED_USER_NAME_KEY = "username"
+    var REQUESTED_SIGN_OUT = false
 }
