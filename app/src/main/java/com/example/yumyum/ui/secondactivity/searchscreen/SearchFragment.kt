@@ -1,5 +1,7 @@
 package com.example.yumyum.ui.secondactivity.searchscreen
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -21,6 +24,7 @@ import com.example.yumyum.ui.secondactivity.MealViewModel
 import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 import com.example.yumyum.ui.secondactivity.mealsviewscreen.MealAdapter
 import com.example.yumyum.util.Constant
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 
 class SearchFragment : Fragment() {
@@ -58,7 +62,10 @@ class SearchFragment : Fragment() {
             }
         }
         binding.recyclerViewSearchedMeals.adapter = mealSearchAdapter
-        searchViewModel.getFavoriteMealIds()
+        if(checkInternet())
+            searchViewModel.getFavoriteMealIds()
+        else
+            Snackbar.make(binding.root,"no Internet connection",Snackbar.LENGTH_SHORT).show()
         searchViewModel.searchResults.observe(viewLifecycleOwner, Observer { meals ->
             val mealsList = meals?.meals ?: emptyList()
             searchViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
@@ -71,7 +78,10 @@ class SearchFragment : Fragment() {
         binding.materialSearchBar.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val query = s.toString()
-                searchViewModel.submitQuery(query)
+                if (checkInternet())
+                    searchViewModel.submitQuery(query)
+                else
+                    Snackbar.make(binding.root,"no Internet connection",Snackbar.LENGTH_SHORT).show()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -94,5 +104,11 @@ class SearchFragment : Fragment() {
             }
         }
         binding.recyclerViewSearchedMeals.adapter = mealSearchAdapter
+    }
+
+    private fun checkInternet():Boolean{
+        val connManger = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connManger.activeNetworkInfo
+        return (networkInfo != null && networkInfo.isConnected)
     }
 }
