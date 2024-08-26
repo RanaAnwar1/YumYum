@@ -1,11 +1,14 @@
 package com.example.yumyum.ui.secondactivity.mealsviewscreen
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +21,7 @@ import com.example.yumyum.ui.secondactivity.MealViewModel
 import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 import com.example.yumyum.util.Constant
 import com.example.yumyum.util.FilterType
+import com.google.android.material.snackbar.Snackbar
 
 
 class MealsViewFragment : Fragment() {
@@ -39,6 +43,7 @@ class MealsViewFragment : Fragment() {
     }
 
     private fun setupMealAdapter(){
+
         viewModel.getFavoriteMealIds()
         adapter = MealAdapter { mealId ->
             val isFavorite = viewModel.favoriteMealIds.value?.contains(mealId) ?: false
@@ -55,15 +60,29 @@ class MealsViewFragment : Fragment() {
     private fun setTheMealSource(){
         val filterType = args.filterType
         val filterWord = args.filterWord
-        if(filterType == FilterType.AREA.ordinal)
-            viewModel.getMealsByArea(filterWord)
-        else
-            viewModel.getMealsByCategory(filterWord)
+        if(filterType == FilterType.AREA.ordinal) {
+            if (checkInternet())
+                viewModel.getMealsByArea(filterWord)
+            else
+                Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
+        }
+        else {
+            if (checkInternet())
+                viewModel.getMealsByCategory(filterWord)
+            else
+                Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
+        }
         viewModel.meals.observe(viewLifecycleOwner) { meals ->
             viewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
                 adapter.setList(meals, favoriteMealIds)
             }
         }
+    }
+
+    private fun checkInternet():Boolean{
+        val connManger = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connManger.activeNetworkInfo
+        return (networkInfo != null && networkInfo.isConnected)
     }
 
 }

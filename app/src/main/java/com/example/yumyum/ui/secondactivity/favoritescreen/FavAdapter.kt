@@ -30,6 +30,7 @@ class FavAdapter(
             val diffResult = DiffUtil.calculateDiff(diffCallback)
             field = value
             diffResult.dispatchUpdatesTo(this)
+            notifyDataSetChanged()
         }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavViewHolder {
         val binding = ItemMealViewBinding.inflate(LayoutInflater.from(parent.context),parent,false)

@@ -1,5 +1,7 @@
 package com.example.yumyum.ui.secondactivity.mealdetailsscreen
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
@@ -18,6 +21,7 @@ import com.example.yumyum.data.source.remote.RetrofitClient
 import com.example.yumyum.ui.secondactivity.MealViewModel
 import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 import com.example.yumyum.util.Constant
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -32,7 +36,7 @@ class MealDetailsFragment : Fragment() {
     private lateinit var faviconbtn: ImageView
 
 
-    private val MealDetailsViewModel: MealViewModel by viewModels {
+    private val mealDetailsViewModel: MealViewModel by viewModels {
         MealViewModelFactory(
             MealsRepositoryImpl(RetrofitClient, ApplicationDatabase.getInstance(requireContext()))
         )
@@ -58,16 +62,22 @@ class MealDetailsFragment : Fragment() {
         faviconbtn = view.findViewById(R.id.btnFavorite)
         val mealId = arguments?.getString("mealId")
         mealId?.let {
-            MealDetailsViewModel.fetchMealDetails(it)
-            Log.d("IngredientsFragment", "Mealsdetails oncreate view")
+            if (checkInternet())
+                mealDetailsViewModel.fetchMealDetails(it)
+            else
+                Toast.makeText(requireContext(),"no internet connection",Toast.LENGTH_SHORT).show()
+
         }
-        MealDetailsViewModel.mealDetails.observe(viewLifecycleOwner) { meal ->
+        mealDetailsViewModel.mealDetails.observe(viewLifecycleOwner) { meal ->
             mealDetailsTitle.text = meal.meals[0].strMeal
             mealDetailsCategory.text = meal.meals[0].strCategory
             Glide.with(this).load(meal.meals[0].strMealThumb).into(mealDetailsCoverPhoto)
         }
-        MealDetailsViewModel.getFavoriteMealIds()
-        MealDetailsViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+        if (checkInternet())
+            mealDetailsViewModel.getFavoriteMealIds()
+        else
+            Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
+        mealDetailsViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
             val isFavorite = favoriteMealIds.contains(mealId)
             faviconbtn.setImageResource(
                 if (isFavorite) R.drawable.baseline_favorite_24
@@ -76,19 +86,19 @@ class MealDetailsFragment : Fragment() {
         }
         faviconbtn.setOnClickListener {
             if (mealId != null) {
-                MealDetailsViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+                mealDetailsViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
                     val isFavorite = favoriteMealIds.contains(mealId)
                     faviconbtn.setImageResource(
                         if (isFavorite) {
-                            MealDetailsViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+                            mealDetailsViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
                             R.drawable.baseline_favorite_border_24
                         } else {
-                            MealDetailsViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+                            mealDetailsViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
                             R.drawable.baseline_favorite_24
                         }
                     )
                 }
-                MealDetailsViewModel.getFavoriteMealIds()
+                mealDetailsViewModel.getFavoriteMealIds()
             }
         }
 
@@ -106,5 +116,10 @@ class MealDetailsFragment : Fragment() {
         return view
     }
 
+    private fun checkInternet():Boolean{
+        val connManger = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connManger.activeNetworkInfo
+        return (networkInfo != null && networkInfo.isConnected)
+    }
 
 }
