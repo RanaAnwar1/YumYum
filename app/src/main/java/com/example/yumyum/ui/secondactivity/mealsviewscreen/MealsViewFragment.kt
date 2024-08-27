@@ -43,14 +43,22 @@ class MealsViewFragment : Fragment() {
     }
 
     private fun setupMealAdapter(){
-
         viewModel.getFavoriteMealIds()
         adapter = MealAdapter { mealId ->
-            val isFavorite = viewModel.favoriteMealIds.value?.contains(mealId) ?: false
+            var isFavorite = false
+            viewModel.favoriteMealIds.observe(viewLifecycleOwner){ favIds ->
+                isFavorite = favIds.contains(mealId)
+            }
             if (isFavorite) {
-                viewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+                if (checkInternet())
+                    viewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+                else
+                    Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+                if (checkInternet())
+                    viewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+                else
+                    Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
             }
         }
         binding.mealsRecycler.adapter = adapter
@@ -60,18 +68,11 @@ class MealsViewFragment : Fragment() {
     private fun setTheMealSource(){
         val filterType = args.filterType
         val filterWord = args.filterWord
-        if(filterType == FilterType.AREA.ordinal) {
-            if (checkInternet())
-                viewModel.getMealsByArea(filterWord)
-            else
-                Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
-        }
-        else {
-            if (checkInternet())
-                viewModel.getMealsByCategory(filterWord)
-            else
-                Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
-        }
+        if (checkInternet())
+            viewModel.getMeals(filterWord,filterType)
+        else
+            Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
+
         viewModel.meals.observe(viewLifecycleOwner) { meals ->
             viewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
                 adapter.setList(meals, favoriteMealIds)

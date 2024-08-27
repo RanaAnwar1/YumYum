@@ -49,7 +49,6 @@ class MealAdapter(val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapt
 
             mealFavBt.setOnClickListener {
                 val newFavoriteStatus = !isFavorite
-                Toast.makeText(holder.binding.root.context,"clicked",Toast.LENGTH_SHORT).show()
                 mealFavBt.setImageResource(
                     if (newFavoriteStatus) R.drawable.baseline_favorite_24
                     else R.drawable.baseline_favorite_border_24

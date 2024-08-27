@@ -18,7 +18,7 @@ import com.example.yumyum.ui.secondactivity.searchscreen.SearchFragmentDirection
 import com.example.yumyum.util.Constant
 
 class FavAdapter(
-    private val viewModel: MealViewModel
+    private val onClick:(id:String) -> Unit
 ) :RecyclerView.Adapter<FavAdapter.FavViewHolder>() {
 
     inner class FavViewHolder(val binding: ItemMealViewBinding):RecyclerView.ViewHolder(binding.root)
@@ -53,7 +53,7 @@ class FavAdapter(
         holder.binding.imgFavoriteIcon.setOnClickListener {
            try {
                 holder.binding.imgFavoriteIcon.setImageResource(R.drawable.baseline_favorite_border_24)
-                viewModel.deleteMealFromFavorites(Constant.USER_NAME, favMealList[position].idMeal )
+                onClick(favMealList[position].idMeal)
             }catch (e: Exception){
                 Log.e("Favorite Screen", "Favorite button : ${e.message}")
             }
