@@ -48,9 +48,15 @@ class MealsViewFragment : Fragment() {
         adapter = MealAdapter { mealId ->
             val isFavorite = viewModel.favoriteMealIds.value?.contains(mealId) ?: false
             if (isFavorite) {
-                viewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+                if (checkInternet())
+                    viewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+                else
+                    Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+                if (checkInternet())
+                    viewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+                else
+                    Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
             }
         }
         binding.mealsRecycler.adapter = adapter

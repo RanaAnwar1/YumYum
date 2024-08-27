@@ -82,4 +82,6 @@ class HomeFragment : Fragment() {
         val networkInfo = connManger.activeNetworkInfo
         return (networkInfo != null && networkInfo.isConnected)
     }
+
+
 }

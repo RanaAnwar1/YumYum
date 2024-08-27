@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 
 @OptIn(FlowPreview::class)
 class MealViewModel(
@@ -70,7 +71,7 @@ class MealViewModel(
             try {
             val result = async { repo.getAreas() }
             _areas.postValue(result.await())
-            } catch (e: Exception) {
+            } catch (e: UnknownHostException) {
                 Log.e("MealViewModel", "Error retrieving all areas: ${e.message}")
             }
         }
@@ -82,7 +83,7 @@ class MealViewModel(
             val result = async { repo.getCategories() }
             _categories.postValue(result.await())
             Log.d("viewmodel_logging",result.await().categories.toString())
-            } catch (e: Exception) {
+            } catch (e: UnknownHostException) {
                 Log.e("MealViewModel", "Error retrieving all categories: ${e.message}")
             }
         }
@@ -94,7 +95,7 @@ class MealViewModel(
             val result = async { repo.getMealsByAreas(area) }
             _meals.postValue(result.await())
             Log.d("viewmodel_logging",result.await().toString())
-            } catch (e: Exception) {
+            } catch (e: UnknownHostException) {
                 Log.e("MealViewModel", "Error retrieving meals by area: ${e.message}")
             }
 
@@ -107,7 +108,7 @@ class MealViewModel(
             val result = async { repo.getMealsByCategories(category) }
             _meals.postValue(result.await())
             Log.d("viewmodel_logging",result.await().toString())
-            } catch (e: Exception) {
+            } catch (e: UnknownHostException) {
                 Log.e("MealViewModel", "Error retrieving meals by category: ${e.message}")
             }
         }
@@ -122,7 +123,7 @@ class MealViewModel(
                 repo.insertFavoriteMeal(meal.meals[0])
                 val crossRef = UserMealCrossRef(username, meal.meals[0].idMeal)
                 repo.insertCrossRef(crossRef)
-            }catch (e: Exception) {
+            }catch (e: UnknownHostException) {
             Log.e("MealViewModel", "Error inserting favorites: ${e.message}")
             }
         }
@@ -133,7 +134,7 @@ class MealViewModel(
             try {
                 val meals = repo.getMealsByUsername(username)
                 _favMeals.postValue(meals)
-            } catch (e: Exception) {
+            } catch (e: UnknownHostException) {
                 Log.e("MealViewModel", "Error retrieving favorites: ${e.message}")
             }
         }
@@ -145,7 +146,7 @@ class MealViewModel(
                 val result = async { repo.searchMealByName(mealName) }
                 _searchResults.postValue(result.await())
                 Log.d("MealViewModel", result.await().toString())
-            } catch (e: Exception) {
+            } catch (e: UnknownHostException) {
                 Log.e("MealViewModel", "Error searching for meal: ${e.message}")
             }
         }
@@ -159,7 +160,7 @@ class MealViewModel(
                 val result = async { repo.getMealById(mealId) }
                 _mealDetails.postValue(result.await())
                 Log.d("MealViewModel", result.await().meals[0].toString())
-            } catch (e: Exception) {
+            } catch (e: UnknownHostException) {
                 Log.e("MealViewModel", "Error fetching meal details: ${e.message}")
             }
         }
@@ -173,7 +174,7 @@ class MealViewModel(
                 repo.deleteFavoriteMeal(meal.meals[0])
                 repo.deleteCrossRef(username,meal.meals[0].idMeal)
                 getFavoriteMealsByUsername(username)
-            } catch (e: Exception) {
+            } catch (e: UnknownHostException) {
                 Log.e("MealViewModel", "Error deleting from favorites: ${e.message}")
             }
         }
@@ -184,7 +185,7 @@ class MealViewModel(
             try {
                 val ids = repo.getFavoriteMealIdsByUsername(Constant.USER_NAME)
                 _favoriteMealIds.postValue(ids.toSet())
-            } catch (e: Exception) {
+            } catch (e: UnknownHostException) {
                 Log.e("MealViewModel", "Error fetching favorite meal ids: ${e.message}")
             }
         }

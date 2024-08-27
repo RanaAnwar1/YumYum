@@ -90,10 +90,16 @@ class MealDetailsFragment : Fragment() {
                     val isFavorite = favoriteMealIds.contains(mealId)
                     faviconbtn.setImageResource(
                         if (isFavorite) {
-                            mealDetailsViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+                            if(checkInternet())
+                                mealDetailsViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+                            else
+                                Toast.makeText(requireContext(),"no internet connection",Toast.LENGTH_SHORT).show()
                             R.drawable.baseline_favorite_border_24
                         } else {
-                            mealDetailsViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+                            if(checkInternet())
+                                mealDetailsViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
+                            else
+                                Toast.makeText(requireContext(),"no internet connection",Toast.LENGTH_SHORT).show()
                             R.drawable.baseline_favorite_24
                         }
                     )
