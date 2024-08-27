@@ -19,6 +19,7 @@ import com.example.yumyum.data.repository.MealsRepository
 import com.example.yumyum.data.repository.UserRepository
 import com.example.yumyum.ui.firstactivity.UserViewModel
 import com.example.yumyum.util.Constant
+import com.example.yumyum.util.FilterType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
@@ -89,28 +90,20 @@ class MealViewModel(
         }
     }
 
-    fun getMealsByArea(area: String){
+    fun getMeals(term: String,filterType:Int){
         viewModelScope.launch(Dispatchers.IO) {
             try {
-            val result = async { repo.getMealsByAreas(area) }
-            _meals.postValue(result.await())
-            Log.d("viewmodel_logging",result.await().toString())
+                if (filterType == FilterType.AREA.ordinal) {
+                    val result = async { repo.getMealsByAreas(term) }
+                    _meals.postValue(result.await())
+                }else{
+                    val result = async { repo.getMealsByCategories(term) }
+                    _meals.postValue(result.await())
+                }
             } catch (e: UnknownHostException) {
                 Log.e("MealViewModel", "Error retrieving meals by area: ${e.message}")
             }
 
-        }
-    }
-
-    fun getMealsByCategory(category:String){
-        viewModelScope.launch (Dispatchers.IO){
-            try {
-            val result = async { repo.getMealsByCategories(category) }
-            _meals.postValue(result.await())
-            Log.d("viewmodel_logging",result.await().toString())
-            } catch (e: UnknownHostException) {
-                Log.e("MealViewModel", "Error retrieving meals by category: ${e.message}")
-            }
         }
     }
 
