@@ -74,9 +74,10 @@ class MealsViewFragment : Fragment() {
             Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
 
         viewModel.meals.observe(viewLifecycleOwner) { meals ->
-            viewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
-                adapter.setList(meals, favoriteMealIds)
-            }
+            adapter.meals = meals
+        }
+        viewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+            adapter.favoriteMealIds = favoriteMealIds
         }
     }
 

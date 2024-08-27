@@ -17,16 +17,22 @@ import com.example.yumyum.ui.secondactivity.searchscreen.SearchFragmentDirection
 class MealAdapter(val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
     var meals:List<Meal> = emptyList()
-    private var favoriteMealIds: Set<String> = emptySet()
+        set(value) {
+            val difference = MealDiffUtil(field,value)
+            val result = DiffUtil.calculateDiff(difference)
+            result.dispatchUpdatesTo(this)
+            field = value
+        }
+    var favoriteMealIds: Set<String> = emptySet()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
     inner class MealViewHolder(val binding: MealItemViewBinding):RecyclerView.ViewHolder(binding.root)
 
-    fun setList(newList: List<Meal>, favoriteIds: Set<String>) {
-        val difference = MealDiffUtil(meals,newList)
-        val result = DiffUtil.calculateDiff(difference)
-        result.dispatchUpdatesTo(this)
-        meals = newList
-        favoriteMealIds = favoriteIds
-    }
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
         val binding = MealItemViewBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return MealViewHolder(binding)
