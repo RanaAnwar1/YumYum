@@ -54,8 +54,8 @@ class SignUpFragment : Fragment() {
     }
 
     private fun startObserver(){
-        viewModel.username.observe(viewLifecycleOwner){ actualUsername ->
-            if (actualUsername == username)
+        viewModel.usernameAvailable.observe(viewLifecycleOwner){ availability ->
+            if (availability)
                 Toast.makeText(requireContext(), "Username already taken", Toast.LENGTH_SHORT).show()
             else {
                 viewModel.insertUser(name, username, password)

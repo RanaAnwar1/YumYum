@@ -45,24 +45,23 @@ class LoginFragment : Fragment() {
         binding.LoginBt.setOnClickListener {
             username = binding.loginUsernameTv.editText?.text.toString().trim()
             password = binding.loginPasswordTv.editText?.text.toString().trim()
-
-            if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            } else {
-                checkUserAvailability(username, password)
-                checkPassword(username, password)
-            }
+            viewModel.checkLoginCredintials(username,password)
         }
     }
 
     private fun startObservers(){
-        viewModel.username.observe(viewLifecycleOwner) { actualUsername ->
-            if (actualUsername != username)
+        viewModel.usernameAvailable.observe(viewLifecycleOwner) { availability ->
+            if (!availability)
                 Toast.makeText(requireContext(), "User is not available please sign up", Toast.LENGTH_LONG).show()
         }
 
-        viewModel.password.observe(viewLifecycleOwner){ actualPassword ->
-            if(actualPassword == password){
+        viewModel.isEmptyLogin.observe(viewLifecycleOwner){ empty ->
+            if(empty)
+                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.rightPassword.observe(viewLifecycleOwner){ rightPassword ->
+            if(rightPassword){
                 if(binding.loginRemembermeCb.isChecked) {
                     editSharedPref()
                     navigate(R.id.action_loginFragment_to_mealActivity)
@@ -81,14 +80,6 @@ class LoginFragment : Fragment() {
         binding.btnSignup.setOnClickListener {
             navigate(R.id.action_loginFragment_to_signUpFragment)
         }
-    }
-
-    private fun checkUserAvailability(username: String, password: String) {
-        viewModel.getUsername(username)
-
-    }
-    private fun checkPassword(username: String,password: String){
-        viewModel.getPassword(username,password)
     }
 
     private fun editSharedPref(){
