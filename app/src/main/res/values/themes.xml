@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.YumYum" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">@color/mystic</item>
-        <item name="colorButtonNormal">@color/gold_drop</item>
+
     </style>
+
     <style name="CustomNavigation" parent="Theme.MaterialComponents"/>
     <style name="Theme.YumYum" parent="Base.Theme.YumYum" />
 
@@ -56,9 +56,26 @@
         <item name="tabGravity">fill</item>
     </style>
 
-    <!-- Style for TabLayout Tab Background -->
     <style name="CustomTabBackground" parent="Widget.Design.TabLayout">
         <item name="android:background">@drawable/tab_background</item>
+    </style>
+
+    <style name="screenbackground">
+        <item name="android:background">@color/mystic</item>
+        <item name="android:backgroundTint">@color/mystic</item>
+    </style>
+
+    <style name="textcolor">
+        <item name="android:textColor">@color/heavy_metal</item>
+    </style>
+
+    <style name="bottomnav" parent="Widget.Design.BottomNavigationView">
+        <item name="android:background">@color/mystic</item>
+        <item name="backgroundTint">@color/mystic</item>
+    </style>
+
+    <style name="ingredientItemColor">
+        <item name="android:backgroundTint">@color/white</item>
     </style>
 
 

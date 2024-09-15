@@ -52,11 +52,11 @@
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/gradient_home"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="500dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/mystic_gradient"
+            android:src="@drawable/heavymetal_gradient"
             app:layout_constraintBottom_toBottomOf="@+id/area_recycler" />
 
         <TextView
@@ -66,7 +66,7 @@
             android:layout_marginTop="60dp"
             android:fontFamily="@font/meditative"
             android:text="@string/area"
-            android:textColor="@color/heavy_metal"
+            style="@style/textcolor"
             android:textSize="@dimen/header_text2"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
@@ -85,7 +85,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/mystic"
+            style="@style/screenbackground"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/area_recycler">
@@ -97,7 +97,7 @@
                 android:layout_marginStart="20dp"
                 android:fontFamily="@font/meditative"
                 android:text="@string/category"
-                android:textColor="@color/heavy_metal"
+                style="@style/textcolor"
                 android:textSize="@dimen/header_text2"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/guideline_start"

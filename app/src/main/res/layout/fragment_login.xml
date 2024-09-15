@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mystic"
+    style="@style/screenbackground"
     tools:context=".ui.firstactivity.loginscreen.LoginFragment">
 
 
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username"
-            android:textColor="@color/heavy_metal"/>
+            style="@style/textcolor"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:textColor="@color/heavy_metal"
+            style="@style/textcolor"
             android:hint="Password" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -103,7 +103,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/login_password_tv"
         app:layout_constraintVertical_bias="0.066"
-        android:buttonTint="@color/heavy_metal"/>
+        android:buttonTint="@color/gold_drop"/>
 
     <TextView
         android:id="@+id/textView2"
@@ -140,7 +140,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:text="don't have account?"
-        android:textColor="@color/heavy_metal"
+        style="@style/textcolor"
         android:textSize="@dimen/body_text"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
