@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-        android:backgroundTint="@color/mystic"
+        style="@style/screenbackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -35,7 +35,7 @@
             android:layout_marginTop="210dp"
             android:textStyle="bold"
             android:textAlignment="center"
-            android:textColor="@color/heavy_metal"
+            style="@style/textcolor"
             android:textSize="@dimen/body_text"
             android:text="tortellini walking into prom"/>
 

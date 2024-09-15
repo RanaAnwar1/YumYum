@@ -36,7 +36,7 @@
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
+        style="@style/bottomnav"
         android:layout_gravity="bottom"
         app:fabAlignmentMode="center"
         app:fabCradleMargin="25dp"

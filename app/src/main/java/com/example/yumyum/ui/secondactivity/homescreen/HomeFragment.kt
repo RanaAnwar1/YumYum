@@ -1,17 +1,19 @@
 package com.example.yumyum.ui.secondactivity.homescreen
 
 import android.content.Context
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.yumyum.R
 import com.example.yumyum.data.repository.MealsRepositoryImpl
 import com.example.yumyum.data.source.local.ApplicationDatabase
 import com.example.yumyum.data.source.remote.RetrofitClient
@@ -19,7 +21,6 @@ import com.example.yumyum.databinding.FragmentHomeBinding
 import com.example.yumyum.ui.secondactivity.MealViewModel
 import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 import com.example.yumyum.util.FilterType
-import com.google.android.material.snackbar.Snackbar
 
 class HomeFragment : Fragment() {
 
@@ -36,6 +37,17 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(layoutInflater,container,false)
         setupAreaAdapter()
         setupCategoryAdapter()
+        val nightModeFlags =
+            requireContext().resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK
+        when (nightModeFlags) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                binding.gradientHome.setImageResource(R.drawable.heavymetal_gradient)
+            }
+            Configuration.UI_MODE_NIGHT_NO -> {
+                binding.gradientHome.setImageResource(R.drawable.mystic_gradient)
+            }
+        }
         return binding.root
     }
 

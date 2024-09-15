@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="8dp"
-    android:backgroundTint="@android:color/white"
+    style="@style/ingredientItemColor"
     android:elevation="4dp"
     android:layout_marginVertical="4dp"
     app:cardCornerRadius="16dp">
@@ -21,15 +21,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="@style/textcolor"
             android:text="Ingredient Title"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/ingredientMeasurement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2"
+            style="@style/textcolor"
             android:textSize="16sp"
             android:textColor="@android:color/black" />
 
