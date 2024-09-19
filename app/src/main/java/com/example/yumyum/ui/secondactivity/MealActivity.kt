@@ -35,7 +35,7 @@ class MealActivity : AppCompatActivity() {
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "Hello"
+        supportActionBar?.title = "Hi, ${Constant.USER_NAME}"
 
         val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_bottom_navigation) as NavHostFragment
         navController = navHost.navController

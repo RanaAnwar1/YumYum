@@ -22,6 +22,11 @@ class MealSearchAdapter(
 
 
     private var favoriteMealIds: Set<String> = emptySet()
+    fun updateMeals(newMealList: List<ReturnedMeals>, favoriteIds: Set<String>) {
+        mealList = newMealList
+        favoriteMealIds = favoriteIds
+        notifyDataSetChanged()
+    }
     class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mealName: TextView = itemView.findViewById(R.id.tvSearchedTitle)
         val mealImage: ImageView = itemView.findViewById(R.id.imgSearched)
@@ -68,9 +73,4 @@ class MealSearchAdapter(
         return mealList.size
     }
 
-    fun updateMeals(newMealList: List<ReturnedMeals>, favoriteIds: Set<String>) {
-        mealList = newMealList
-        favoriteMealIds = favoriteIds
-        notifyDataSetChanged()
-    }
 }

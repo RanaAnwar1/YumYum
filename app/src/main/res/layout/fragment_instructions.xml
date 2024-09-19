@@ -1,16 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_marginBottom="100dp"
     android:padding="16dp"
     style="@style/screenbackground"
     tools:context=".ui.secondactivity.mealdetailsscreen.instructionsfragment.InstructionsFragment">
 
-    <!-- FrameLayout to overlay the ImageView and the play button -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="200dp">
@@ -29,7 +34,6 @@
             android:background="@null"
             android:src="@drawable/baseline_smart_display_24"
             android:contentDescription="play_video" />
-
     </FrameLayout>
 
     <TextView
@@ -37,27 +41,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Details"
+        android:text="@string/details"
         style="@style/textcolor"
         android:textSize="24sp"
         android:textStyle="bold" />
-
 
     <TextView
         android:id="@+id/instructionDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Here are the steps to prepare the healthy taco salad..."
+        android:text="@string/here_are_the_steps_to_prepare_the_recipe"
         style="@style/screenbackground"
         android:maxLines="3"
         android:ellipsize="end"
         android:textSize="16sp" />
+
     <TextView
         android:id="@+id/toggleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="See More"
+        android:text="@string/see_more"
         android:textColor="@color/gold_drop"
         android:textSize="14sp"
         android:paddingTop="8dp"/>

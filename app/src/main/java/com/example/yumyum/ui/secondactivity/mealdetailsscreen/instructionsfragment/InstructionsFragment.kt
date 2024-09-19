@@ -12,7 +12,9 @@ import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -25,8 +27,10 @@ import com.example.yumyum.data.repository.MealsRepositoryImpl
 import com.example.yumyum.data.source.local.ApplicationDatabase
 import com.example.yumyum.data.source.remote.RetrofitClient
 import com.example.yumyum.databinding.FragmentInstructionsBinding
+import com.example.yumyum.ui.Resource
 import com.example.yumyum.ui.secondactivity.MealViewModel
 import com.example.yumyum.ui.secondactivity.MealViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 
 class InstructionsFragment : Fragment() {
     private lateinit var videoPreview: ImageView
@@ -34,6 +38,7 @@ class InstructionsFragment : Fragment() {
     private lateinit var instructionDescription: TextView
     private lateinit var videoDialog: Dialog
     private lateinit var toggleTextView: TextView
+    private lateinit var progressBar: ProgressBar
     private var isExpanded = false
     private val instructionsViewModel: MealViewModel by viewModels({requireParentFragment()}) {
         MealViewModelFactory(
@@ -54,25 +59,54 @@ class InstructionsFragment : Fragment() {
         videoDialog = Dialog(requireContext(), android.R.style.Theme_Dialog)
         videoDialog.setContentView(R.layout.dialog_video_player)
         toggleTextView = view.findViewById(R.id.toggleTextView)
-
+        progressBar = view.findViewById(R.id.progressBar)
         toggleTextView.setOnClickListener {
             toggleDescription()
         }
-        instructionsViewModel.mealDetails.observe(viewLifecycleOwner) { meal ->
-            val youtubeLink = meal.meals[0].strYoutube ?: ""
-            Log.d("InstructionsFragment", "instructionViewModel youtube: $youtubeLink")
-            val embedLink = convertToEmbedLink(youtubeLink)
-            val thumbnailUrl = getYoutubeThumbnailUrl(youtubeLink)
+//        instructionsViewModel.mealDetails.observe(viewLifecycleOwner) { meal ->
+//            val youtubeLink = meal.meals[0].strYoutube ?: ""
+//            Log.d("InstructionsFragment", "instructionViewModel youtube: $youtubeLink")
+//            val embedLink = convertToEmbedLink(youtubeLink)
+//            val thumbnailUrl = getYoutubeThumbnailUrl(youtubeLink)
+//
+//            Glide.with(this)
+//                .load(thumbnailUrl)
+//                .placeholder(R.drawable.empty)
+//                .into(videoPreview)
+//
+//            playButton.setOnClickListener {
+//                showVideoDialog(embedLink)
+//            }
+//            instructionDescription.text = meal.meals[0].strInstructions
+//        }
 
-            Glide.with(this)
-                .load(thumbnailUrl)
-                .placeholder(R.drawable.empty)
-                .into(videoPreview)
+        instructionsViewModel.mealDetails.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+                is Resource.Success -> {
+                   progressBar.visibility = View.GONE
+                    resource.data?.let { meal ->
+                        val youtubeLink = meal.meals[0].strYoutube ?: ""
+                        val embedLink = convertToEmbedLink(youtubeLink)
+                        val thumbnailUrl = getYoutubeThumbnailUrl(youtubeLink)
 
-            playButton.setOnClickListener {
-                showVideoDialog(embedLink)
+                        Glide.with(this)
+                            .load(thumbnailUrl)
+                            .placeholder(R.drawable.empty)
+                            .into(videoPreview)
+
+                        playButton.setOnClickListener {
+                            showVideoDialog(embedLink)
+                        }
+                        instructionDescription.text = meal.meals[0].strInstructions
+                    }
+                }
+                is Resource.Error -> {
+                    progressBar.visibility = View.GONE
+                    showToast(resource.message ?: "Error loading meal details")                }
             }
-            instructionDescription.text = meal.meals[0].strInstructions
         }
 
         return view
@@ -115,6 +149,9 @@ class InstructionsFragment : Fragment() {
             toggleTextView.text = "See More"
         }
         instructionDescription.requestLayout()
+    }
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
     override fun onDestroy() {
         super.onDestroy()
