@@ -17,6 +17,7 @@ import com.example.yumyum.data.repository.MealsRepositoryImpl
 import com.example.yumyum.data.source.local.ApplicationDatabase
 import com.example.yumyum.data.source.remote.RetrofitClient
 import com.example.yumyum.databinding.FragmentMealsViewBinding
+import com.example.yumyum.ui.Resource
 import com.example.yumyum.ui.secondactivity.MealViewModel
 import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 import com.example.yumyum.util.Constant
@@ -51,14 +52,15 @@ class MealsViewFragment : Fragment() {
             }
             if (isFavorite) {
                 if (checkInternet())
+                {
                     viewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
+                }
                 else
-                    Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
-            } else {
+                    Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_LONG).show()            } else {
                 if (checkInternet())
                     viewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
                 else
-                    Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_LONG).show()
             }
         }
         binding.mealsRecycler.adapter = adapter
@@ -71,14 +73,37 @@ class MealsViewFragment : Fragment() {
         if (checkInternet())
             viewModel.getMeals(filterWord,filterType)
         else
-            Toast.makeText(requireContext(),"No internet connection",Toast.LENGTH_SHORT).show()
-
-        viewModel.meals.observe(viewLifecycleOwner) { meals ->
-            adapter.meals = meals
+            Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_LONG).show()//        viewModel.meals.observe(viewLifecycleOwner) { meals ->
+//            adapter.meals = meals
+//        }
+        viewModel.meals.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    Log.d("MealsViewFragment", "Loading meals...")
+                }
+                is Resource.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                    resource.data?.let { meals ->
+                        adapter.meals = meals
+                    }
+                }
+                is Resource.Error -> {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), resource.message ?: "Error loading meals", Toast.LENGTH_LONG).show()
+                }
+            }
         }
         viewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
             adapter.favoriteMealIds = favoriteMealIds
         }
+//        viewModel.meals.observe(viewLifecycleOwner) { meals ->
+//            adapter.setList(meals, viewModel.favoriteMealIds.value ?: emptySet())
+//        }
+//
+//        viewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+//            adapter.setList(viewModel.meals.value ?: emptyList(), favoriteMealIds)
+//        }
     }
 
     private fun checkInternet():Boolean{

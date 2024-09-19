@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import com.example.yumyum.R
 import com.example.yumyum.data.repository.MealsRepositoryImpl
 import com.example.yumyum.data.source.local.ApplicationDatabase
 import com.example.yumyum.data.source.remote.RetrofitClient
+import com.example.yumyum.ui.Resource
 import com.example.yumyum.ui.secondactivity.MealViewModel
 import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 import com.example.yumyum.util.Constant
@@ -34,7 +36,7 @@ class MealDetailsFragment : Fragment() {
     private lateinit var mealDetailsCategory: TextView
     private lateinit var mealDetailsCoverPhoto: ImageView
     private lateinit var faviconbtn: ImageView
-
+    private lateinit var progressBar:ProgressBar
 
     private val mealDetailsViewModel: MealViewModel by viewModels {
         MealViewModelFactory(
@@ -60,18 +62,37 @@ class MealDetailsFragment : Fragment() {
         mealDetailsCategory = view.findViewById(R.id.mealDetailsCategory)
         mealDetailsCoverPhoto = view.findViewById(R.id.mealDetailsCoverPhoto)
         faviconbtn = view.findViewById(R.id.btnFavorite)
+        progressBar = view.findViewById(R.id.progressBar)
         val mealId = arguments?.getString("mealId")
         mealId?.let {
             if (checkInternet())
                 mealDetailsViewModel.fetchMealDetails(it)
             else
-                Toast.makeText(requireContext(),"no internet connection",Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
         }
-        mealDetailsViewModel.mealDetails.observe(viewLifecycleOwner) { meal ->
-            mealDetailsTitle.text = meal.meals[0].strMeal
-            mealDetailsCategory.text = meal.meals[0].strCategory
-            Glide.with(this).load(meal.meals[0].strMealThumb).into(mealDetailsCoverPhoto)
+//        mealDetailsViewModel.mealDetails.observe(viewLifecycleOwner) { meal ->
+//            mealDetailsTitle.text = meal.meals[0].strMeal
+//            mealDetailsCategory.text = meal.meals[0].strCategory
+//            Glide.with(this).load(meal.meals[0].strMealThumb).into(mealDetailsCoverPhoto)
+//        }
+        mealDetailsViewModel.mealDetails.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+                is Resource.Success -> {
+                    progressBar.visibility = View.GONE
+                    resource.data?.let { meal ->
+                        mealDetailsTitle.text = meal.meals[0].strMeal
+                        mealDetailsCategory.text = meal.meals[0].strCategory
+                        Glide.with(this).load(meal.meals[0].strMealThumb).into(mealDetailsCoverPhoto)
+                    }
+                }
+                is Resource.Error -> {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), resource.message ?: "Error loading details", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
         if (checkInternet())
             mealDetailsViewModel.getFavoriteMealIds()
@@ -93,13 +114,13 @@ class MealDetailsFragment : Fragment() {
                             if(checkInternet())
                                 mealDetailsViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
                             else
-                                Toast.makeText(requireContext(),"no internet connection",Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
                             R.drawable.baseline_favorite_border_24
                         } else {
                             if(checkInternet())
                                 mealDetailsViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
                             else
-                                Toast.makeText(requireContext(),"no internet connection",Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
                             R.drawable.baseline_favorite_24
                         }
                     )

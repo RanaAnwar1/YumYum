@@ -60,6 +60,7 @@ class MealAdapter(val onFavBtClicked:(mealId:String) -> Unit):RecyclerView.Adapt
                     else R.drawable.baseline_favorite_border_24
                 )
                 onFavBtClicked(meal.idMeal)
+                
             }
         }
         holder.itemView.setOnClickListener {

@@ -17,6 +17,7 @@ import com.example.yumyum.data.model.SearchedMeal
 import com.example.yumyum.data.model.relation.UserMealCrossRef
 import com.example.yumyum.data.repository.MealsRepository
 import com.example.yumyum.data.repository.UserRepository
+import com.example.yumyum.ui.Resource
 import com.example.yumyum.ui.firstactivity.UserViewModel
 import com.example.yumyum.util.Constant
 import com.example.yumyum.util.FilterType
@@ -34,25 +35,25 @@ import java.net.UnknownHostException
 class MealViewModel(
     private val repo:MealsRepository
 ):ViewModel() {
-    private val _areas = MutableLiveData<Areas>()
-    val areas:LiveData<Areas> get() = _areas
+    private val _areas = MutableLiveData<Resource<Areas>>()
+    val areas:LiveData<Resource<Areas>> get() = _areas
 
-    private val _categories = MutableLiveData<Categories>()
-    val categories:LiveData<Categories> get() = _categories
+    private val _categories = MutableLiveData<Resource<Categories>>()
+    val categories:LiveData<Resource<Categories>> get() = _categories
 
-    private val _meals = MutableLiveData<List<Meal>>()
-    val meals:LiveData<List<Meal>> get() = _meals
+    private val _meals = MutableLiveData<Resource<List<Meal>>>()
+    val meals:LiveData<Resource<List<Meal>>> get() = _meals
 
-    private val _favMeals = MutableLiveData<List<FavoriteMeal>>()
-    val favMeals:LiveData<List<FavoriteMeal>> get() = _favMeals
+    private val _favMeals = MutableLiveData<Resource<List<FavoriteMeal>>>()
+    val favMeals:LiveData<Resource<List<FavoriteMeal>>> get() = _favMeals
 
-    private val _searchResults = MutableLiveData<SearchedMeal>()
-    val searchResults: LiveData<SearchedMeal> get() = _searchResults
+    private val _searchResults = MutableLiveData<Resource<SearchedMeal>>()
+    val searchResults: LiveData<Resource<SearchedMeal>> get() = _searchResults
 
     private val queryChannel = Channel<String>(Channel.CONFLATED)
 
-    private val _mealDetails = MutableLiveData<ReturnedMeal>()
-    val mealDetails: LiveData<ReturnedMeal> get() = _mealDetails
+    private val _mealDetails = MutableLiveData<Resource<ReturnedMeal>>()
+    val mealDetails: LiveData<Resource<ReturnedMeal>> get() = _mealDetails
 
     private val _favoriteMealIds = MutableLiveData<Set<String>>()
     val favoriteMealIds: LiveData<Set<String>> get() = _favoriteMealIds
@@ -60,7 +61,7 @@ class MealViewModel(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             queryChannel.receiveAsFlow()
-                .debounce(1000)
+                .debounce(800)
                 .distinctUntilChanged()
                 .collect { query ->
                     searchMealByName(query)
@@ -69,10 +70,12 @@ class MealViewModel(
     }
     fun getAllAreas(){
         viewModelScope.launch (Dispatchers.IO){
+            _areas.postValue(Resource.Loading())
             try {
-            val result = async { repo.getAreas() }
-            _areas.postValue(result.await())
-            } catch (e: UnknownHostException) {
+                val result = repo.getAreas()
+                _areas.postValue(Resource.Success(result))
+            } catch (e: Exception) {
+                _areas.postValue(Resource.Error("Error retrieving areas: ${e.message}"))
                 Log.e("MealViewModel", "Error retrieving all areas: ${e.message}")
             }
         }
@@ -80,11 +83,12 @@ class MealViewModel(
 
     fun getAllCategories(){
         viewModelScope.launch(Dispatchers.IO) {
+            _categories.postValue(Resource.Loading())
             try {
-            val result = async { repo.getCategories() }
-            _categories.postValue(result.await())
-            Log.d("viewmodel_logging",result.await().categories.toString())
-            } catch (e: UnknownHostException) {
+                val result = repo.getCategories()
+                _categories.postValue(Resource.Success(result))
+            } catch (e: Exception) {
+                _categories.postValue(Resource.Error("Error retrieving categories: ${e.message}"))
                 Log.e("MealViewModel", "Error retrieving all categories: ${e.message}")
             }
         }
@@ -92,16 +96,18 @@ class MealViewModel(
 
     fun getMeals(term: String,filterType:Int){
         viewModelScope.launch(Dispatchers.IO) {
+            _meals.postValue(Resource.Loading())
             try {
                 if (filterType == FilterType.AREA.ordinal) {
-                    val result = async { repo.getMealsByAreas(term) }
-                    _meals.postValue(result.await())
+                    val result = repo.getMealsByAreas(term)
+                    _meals.postValue(Resource.Success(result))
                 }else{
-                    val result = async { repo.getMealsByCategories(term) }
-                    _meals.postValue(result.await())
+                    val result = repo.getMealsByCategories(term)
+                    _meals.postValue(Resource.Success(result))
                 }
-            } catch (e: UnknownHostException) {
-                Log.e("MealViewModel", "Error retrieving meals by area: ${e.message}")
+            } catch (e: Exception) {
+                _meals.postValue(Resource.Error("Error retrieving meals: ${e.message}"))
+                Log.e("MealViewModel", "Error retrieving meals: ${e.message}")
             }
 
         }
@@ -116,7 +122,7 @@ class MealViewModel(
                 repo.insertFavoriteMeal(meal.meals[0])
                 val crossRef = UserMealCrossRef(username, meal.meals[0].idMeal)
                 repo.insertCrossRef(crossRef)
-            }catch (e: UnknownHostException) {
+            }catch (e: Exception) {
             Log.e("MealViewModel", "Error inserting favorites: ${e.message}")
             }
         }
@@ -124,10 +130,12 @@ class MealViewModel(
 
     fun getFavoriteMealsByUsername(username: String){
         viewModelScope.launch(Dispatchers.IO) {
+            _favMeals.postValue(Resource.Loading())
             try {
                 val meals = repo.getMealsByUsername(username)
-                _favMeals.postValue(meals)
-            } catch (e: UnknownHostException) {
+                _favMeals.postValue(Resource.Success(meals))
+            } catch (e: Exception) {
+                _favMeals.postValue(Resource.Error("Error retrieving favorite meals: ${e.message}"))
                 Log.e("MealViewModel", "Error retrieving favorites: ${e.message}")
             }
         }
@@ -135,11 +143,12 @@ class MealViewModel(
 
     fun searchMealByName(mealName: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            _searchResults.postValue(Resource.Loading())
             try {
-                val result = async { repo.searchMealByName(mealName) }
-                _searchResults.postValue(result.await())
-                Log.d("MealViewModel", result.await().toString())
-            } catch (e: UnknownHostException) {
+                val result = repo.searchMealByName(mealName)
+                _searchResults.postValue(Resource.Success(result))
+            } catch (e: Exception) {
+                _searchResults.postValue(Resource.Error("Error searching for meal: ${e.message}"))
                 Log.e("MealViewModel", "Error searching for meal: ${e.message}")
             }
         }
@@ -149,11 +158,13 @@ class MealViewModel(
     }
     fun fetchMealDetails(mealId: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            _mealDetails.postValue(Resource.Loading())
             try {
-                val result = async { repo.getMealById(mealId) }
-                _mealDetails.postValue(result.await())
-                Log.d("MealViewModel", result.await().meals[0].toString())
+                val result = repo.getMealById(mealId)
+                _mealDetails.postValue(Resource.Success(result))
+
             } catch (e: UnknownHostException) {
+                _mealDetails.postValue(Resource.Error("Error fetching meal details: ${e.message}"))
                 Log.e("MealViewModel", "Error fetching meal details: ${e.message}")
             }
         }

@@ -10,4 +10,21 @@
     <string name="category">Category</string>
     <string name="application_name">YUMYUM</string>
     <string name="welcoming_text">Let\'s prepare meals together</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="don_t_have_account">don\'t have account?</string>
+    <string name="remember_me">remember me</string>
+    <string name="title">Title</string>
+    <string name="measurment">0</string>
+    <string name="search_for_meals">Search for meals</string>
+    <string name="Category_detail">Category</string>
+    <string name="details">Details</string>
+    <string name="here_are_the_steps_to_prepare_the_recipe">Here are the steps to prepare the recipe...</string>
+    <string name="see_more">See More</string>
+    <string name="about_yumyum">About YumYum</string>
+    <string name="about_description">YumYum is your ultimate recipe application. Discover delicious recipes from around the world, save your favorites, and create culinary masterpieces in your own kitchen. Whether you\'re a beginner or an experienced chef, YumYum makes cooking fun and easy.</string>
+    <string name="close">close</string>
+    <string name="about_title">About</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

@@ -20,6 +20,7 @@ import com.example.yumyum.data.repository.MealsRepositoryImpl
 import com.example.yumyum.data.source.local.ApplicationDatabase
 import com.example.yumyum.data.source.remote.RetrofitClient
 import com.example.yumyum.databinding.FragmentSearchBinding
+import com.example.yumyum.ui.Resource
 import com.example.yumyum.ui.secondactivity.MealViewModel
 import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 import com.example.yumyum.ui.secondactivity.mealsviewscreen.MealAdapter
@@ -51,27 +52,37 @@ class SearchFragment : Fragment() {
         setRecycler()
         setSearchBar()
 
-
-        mealSearchAdapter = MealSearchAdapter(emptyList()) { mealId ->
-//            searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
-            val isFavorite = searchViewModel.favoriteMealIds.value?.contains(mealId) ?: false
-            if (isFavorite) {
-                searchViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)
-            } else {
-                searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
-            }
-        }
         binding.recyclerViewSearchedMeals.adapter = mealSearchAdapter
         if(checkInternet())
             searchViewModel.getFavoriteMealIds()
         else
-            Snackbar.make(binding.root,"no Internet connection",Snackbar.LENGTH_SHORT).show()
-        searchViewModel.searchResults.observe(viewLifecycleOwner, Observer { meals ->
-            val mealsList = meals?.meals ?: emptyList()
-            searchViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
-                mealSearchAdapter.updateMeals(mealsList, favoriteMealIds.toSet())
+            Toast.makeText(requireContext(), "No Internet connection", Toast.LENGTH_SHORT).show()
+
+//        searchViewModel.searchResults.observe(viewLifecycleOwner, Observer { meals ->
+//            val mealsList = meals?.meals ?: emptyList()
+//            searchViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+//                mealSearchAdapter.updateMeals(mealsList, favoriteMealIds.toSet())
+//            }
+//        })
+        searchViewModel.searchResults.observe(viewLifecycleOwner, Observer { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+                is Resource.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                    val mealsList = resource.data?.meals ?: emptyList()
+                    searchViewModel.favoriteMealIds.observe(viewLifecycleOwner) { favoriteMealIds ->
+                        mealSearchAdapter.updateMeals(mealsList, favoriteMealIds.toSet())
+                    }
+                }
+                is Resource.Error -> {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), resource.message ?: "Error fetching meals", Toast.LENGTH_SHORT).show()
+                }
             }
         })
+
 
     }
     private fun setSearchBar(){
@@ -81,7 +92,7 @@ class SearchFragment : Fragment() {
                 if (checkInternet())
                     searchViewModel.submitQuery(query)
                 else
-                    Snackbar.make(binding.root,"no Internet connection",Snackbar.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "No Internet connection", Toast.LENGTH_SHORT).show()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -95,7 +106,6 @@ class SearchFragment : Fragment() {
     private fun setRecycler(){
         binding.recyclerViewSearchedMeals.layoutManager = LinearLayoutManager(context)
         mealSearchAdapter = MealSearchAdapter(emptyList()) { mealId ->
-//            searchViewModel.insertFavoriteMealById(Constant.USER_NAME, mealId)
             val isFavorite = searchViewModel.favoriteMealIds.value?.contains(mealId) ?: false
             if (isFavorite) {
                 searchViewModel.deleteMealFromFavorites(Constant.USER_NAME, mealId)

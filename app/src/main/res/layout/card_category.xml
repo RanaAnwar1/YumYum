@@ -37,7 +37,7 @@
             android:textAlignment="center"
             style="@style/textcolor"
             android:textSize="@dimen/body_text"
-            android:text="tortellini walking into prom"/>
+            android:text="@string/title"/>
 
 
     </com.google.android.material.card.MaterialCardView>

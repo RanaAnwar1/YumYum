@@ -7,10 +7,17 @@
     style="@style/screenbackground"
     android:padding="16dp">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search for meals"
+        android:hint="@string/search_for_meals"
         app:startIconDrawable="@drawable/baseline_search_24"
         style="@style/YamYamTextInputLayout"
         android:textColor="@color/heavy_metal">
@@ -29,6 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="70dp"/>
+        android:layout_marginBottom="30dp"/>
 
 </LinearLayout>

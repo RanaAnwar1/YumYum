@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="About YumYum"
+            android:text="@string/about_yumyum"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -40,7 +40,7 @@
             android:id="@+id/aboutDescriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="YumYum is your ultimate recipe application. Discover delicious recipes from around the world, save your favorites, and create culinary masterpieces in your own kitchen. Whether you're a beginner or an experienced chef, YumYum makes cooking fun and easy."
+            android:text="@string/about_description"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="16sp" />

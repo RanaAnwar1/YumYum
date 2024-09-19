@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yumyum.R
@@ -18,9 +19,11 @@ import com.example.yumyum.data.repository.MealsRepositoryImpl
 import com.example.yumyum.data.source.local.ApplicationDatabase
 import com.example.yumyum.data.source.remote.RetrofitClient
 import com.example.yumyum.databinding.FragmentHomeBinding
+import com.example.yumyum.ui.Resource
 import com.example.yumyum.ui.secondactivity.MealViewModel
 import com.example.yumyum.ui.secondactivity.MealViewModelFactory
 import com.example.yumyum.util.FilterType
+import com.google.android.material.snackbar.Snackbar
 
 class HomeFragment : Fragment() {
 
@@ -62,10 +65,27 @@ class HomeFragment : Fragment() {
         if(checkInternet())
             viewModel.getAllAreas()
         else
-            Toast.makeText(requireContext(),"no internet connection",Toast.LENGTH_SHORT).show()
-        viewModel.areas.observe(viewLifecycleOwner){ areas ->
-            areaAdapter.areas = areas.meals
+        {
+            showToast("No internet connection")
+            //showSnackbar("No internet connection")
         }
+//            Snackbar.make(binding.root,"no Internet connection",Snackbar.LENGTH_SHORT).show()
+//            viewModel.areas.observe(viewLifecycleOwner){ areas ->
+//                areaAdapter.areas = areas.meals
+//        }
+        viewModel.areas.observe(viewLifecycleOwner, Observer { resource ->
+            when (resource) {
+                is Resource.Loading -> showLoading()
+                is Resource.Success -> {
+                    hideLoading()
+                    areaAdapter.areas = resource.data?.meals ?: emptyList()
+                }
+                is Resource.Error -> {
+                    hideLoading()
+                    showToast(resource.message ?: "Error fetching areas")
+                }
+            }
+        })
         binding.areaRecycler.adapter = areaAdapter
         binding.areaRecycler.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
     }
@@ -81,10 +101,27 @@ class HomeFragment : Fragment() {
         if(checkInternet())
             viewModel.getAllCategories()
         else
-            Toast.makeText(requireContext(),"no internet connection",Toast.LENGTH_SHORT).show()
-        viewModel.categories.observe(viewLifecycleOwner){categories ->
-            categoryAdapter.categories = categories.categories
+        {
+            showToast("No internet connection")
+            //showSnackbar("No internet connection")
+//            Snackbar.make(binding.root,"no Internet connection",Snackbar.LENGTH_SHORT).show()
+//        viewModel.categories.observe(viewLifecycleOwner){categories ->
+//            categoryAdapter.categories = categories.categories
         }
+        viewModel.categories.observe(viewLifecycleOwner, Observer { resource ->
+            when (resource) {
+                is Resource.Loading -> showLoading()
+                is Resource.Success -> {
+                    hideLoading()
+                    categoryAdapter.categories = resource.data?.categories ?: emptyList()
+                }
+                is Resource.Error -> {
+                    hideLoading()
+                    showToast(resource.message ?: "Error fetching categories")
+                    //showSnackbar(resource.message ?: "Error fetching categories")
+                }
+            }
+        })
         binding.categoryRecycler.adapter = categoryAdapter
         binding.categoryRecycler.layoutManager = LinearLayoutManager(requireContext())
     }
@@ -93,6 +130,20 @@ class HomeFragment : Fragment() {
         val connManger = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connManger.activeNetworkInfo
         return (networkInfo != null && networkInfo.isConnected)
+    }
+//    private fun showSnackbar(message: String) {
+//        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+//    }
+private fun showToast(message: String) {
+    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+}
+
+    private fun showLoading() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding.progressBar.visibility = View.GONE
     }
 
 

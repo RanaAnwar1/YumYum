@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    style="@style/screenbackground"
+    style="@style/mealCardbackground"
     android:elevation="4dp"
     >
 
@@ -39,8 +39,7 @@
             android:layout_toStartOf="@+id/imgFavoriteIcon"
             android:layout_toEndOf="@+id/imgSearched"
             android:layout_toRightOf="@id/imgSearched"
-            android:text="Favorite Title"
-            android:textColor="@color/black"
+            android:text="@string/title"
             android:textSize="16sp"
             android:textStyle="bold" />
     </RelativeLayout>

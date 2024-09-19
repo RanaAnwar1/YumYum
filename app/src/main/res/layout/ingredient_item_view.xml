@@ -22,14 +22,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             style="@style/textcolor"
-            android:text="Ingredient Title"
+            android:text="@string/title"
             android:textSize="18sp"
             android:textStyle="bold" />
         <TextView
             android:id="@+id/ingredientMeasurement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2"
+            android:text="@string/measurment"
             style="@style/textcolor"
             android:textSize="16sp"
             android:textColor="@android:color/black" />
